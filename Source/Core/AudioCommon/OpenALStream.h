@@ -57,7 +57,8 @@ public:
   ~OpenALStream() override;
   bool Init() override;
   void SetVolume(int volume) override;
-  bool SetRunning(bool running) override;
+  bool StartRunning() override;
+  bool StopRunning() override;
 
   static bool IsValid();
 

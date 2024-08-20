@@ -8,11 +8,6 @@ bool NullSound::Init()
   return true;
 }
 
-bool NullSound::SetRunning(bool running)
-{
-  return true;
-}
-
 void NullSound::SetVolume(int volume)
 {
 }

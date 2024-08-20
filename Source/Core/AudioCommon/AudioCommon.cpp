@@ -181,12 +181,18 @@ void SetSoundStreamRunning(Core::System& system, bool running)
     return;
   system.SetSoundStreamRunning(running);
 
-  if (sound_stream->SetRunning(running))
-    return;
   if (running)
+  {
+    if (sound_stream->StartRunning())
+      return;
     ERROR_LOG_FMT(AUDIO, "Error starting stream.");
+  }
   else
+  {
+    if (sound_stream->StopRunning())
+      return;
     ERROR_LOG_FMT(AUDIO, "Error stopping stream.");
+  }
 }
 
 void SendAIBuffer(Core::System& system, const short* samples, unsigned int num_samples)

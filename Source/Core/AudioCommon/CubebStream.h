@@ -23,7 +23,12 @@ public:
   CubebStream& operator=(CubebStream&& other) = delete;
   ~CubebStream() override;
   bool Init() override;
-  bool SetRunning(bool running) override;
+  bool StartRunning() override;
+  bool StartRunningWin32();
+  bool StartRunning() const;
+  bool StopRunning() override;
+  bool StopRunningWin32();
+  bool StopRunning() const;
   void SetVolume(int) override;
 
 private:

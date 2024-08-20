@@ -105,27 +105,64 @@ bool CubebStream::Init()
   return return_value;
 }
 
-bool CubebStream::SetRunning(bool running)
+bool CubebStream::StartRunning()
+{
+#ifdef _WIN32
+  return StartRunningWin32();
+#elif _WIN32
+  return StartRunning();
+#endif
+}
+
+bool CubebStream::StartRunningWin32()
 {
   bool return_value = false;
 
-#ifdef _WIN32
   if (!m_coinit_success)
     return false;
   Common::Event sync_event;
-  m_work_queue.EmplaceItem([this, running, &return_value, &sync_event] {
+  m_work_queue.EmplaceItem([this, &return_value, &sync_event] {
     Common::ScopeGuard sync_event_guard([&sync_event] { sync_event.Set(); });
-#endif
-    if (running)
-      return_value = cubeb_stream_start(m_stream) == CUBEB_OK;
-    else
-      return_value = cubeb_stream_stop(m_stream) == CUBEB_OK;
-#ifdef _WIN32
+    return_value = StartRunning();
   });
   sync_event.Wait();
-#endif
 
   return return_value;
+}
+
+bool CubebStream::StartRunning() const
+{
+  return cubeb_stream_start(m_stream) == CUBEB_OK;
+}
+
+bool CubebStream::StopRunning()
+{
+#ifdef _WIN32
+  return StopRunningWin32();
+#elif _WIN32
+  return StopRunning();
+#endif
+}
+
+bool CubebStream::StopRunningWin32()
+{
+  bool return_value = false;
+
+  if (!m_coinit_success)
+    return false;
+  Common::Event sync_event;
+  m_work_queue.EmplaceItem([this, &return_value, &sync_event] {
+    Common::ScopeGuard sync_event_guard([&sync_event] { sync_event.Set(); });
+    return_value = StopRunning();
+  });
+  sync_event.Wait();
+
+  return return_value;
+}
+
+bool CubebStream::StopRunning() const
+{
+  return cubeb_stream_stop(m_stream) == CUBEB_OK;
 }
 
 CubebStream::~CubebStream()

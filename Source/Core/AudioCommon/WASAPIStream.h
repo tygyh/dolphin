@@ -34,7 +34,8 @@ public:
   explicit WASAPIStream();
   ~WASAPIStream();
   bool Init() override;
-  bool SetRunning(bool running) override;
+  bool StartRunning() override;
+  bool StopRunning() override;
 
   static bool IsValid();
   static std::vector<std::string> GetAvailableDevices();

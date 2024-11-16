@@ -205,10 +205,8 @@ std::string WriteGameModDescriptorString(const GameModDescriptor& descriptor, bo
   return picojson::value(json_root).serialize(pretty);
 }
 
-bool WriteGameModDescriptorFile(const std::string& filename, const GameModDescriptor& descriptor,
-                                bool pretty)
+bool WriteGameModDescriptorFile(const std::string &filename, const std::string& json)
 {
-  auto json = WriteGameModDescriptorString(descriptor, pretty);
   if (json.empty())
     return false;
 

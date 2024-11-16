@@ -45,6 +45,5 @@ std::optional<GameModDescriptor> ParseGameModDescriptorFile(const std::string& f
 std::optional<GameModDescriptor> ParseGameModDescriptorString(std::string_view json,
                                                               std::string_view json_path);
 std::string WriteGameModDescriptorString(const GameModDescriptor& descriptor, bool pretty);
-bool WriteGameModDescriptorFile(const std::string& filename, const GameModDescriptor& descriptor,
-                                bool pretty);
+bool WriteGameModDescriptorFile(const std::string &filename, const std::string& json);
 }  // namespace DiscIO

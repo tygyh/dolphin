@@ -350,5 +350,6 @@ void RiivolutionBootWidget::SaveAsPreset()
   auto dot = descriptor.display_name.rfind('.');
   if (dot != std::string::npos)
     descriptor.display_name = descriptor.display_name.substr(0, dot);
-  DiscIO::WriteGameModDescriptorFile(target_path.toStdString(), descriptor, true);
+  const auto json = WriteGameModDescriptorString(descriptor, true);
+  DiscIO::WriteGameModDescriptorFile(target_path.toStdString(), json);
 }

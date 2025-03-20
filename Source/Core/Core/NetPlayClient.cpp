@@ -1540,10 +1540,9 @@ void NetPlayClient::DisplayPlayersPing()
 
 u32 NetPlayClient::GetPlayersMaxPing() const
 {
-  return std::max_element(
-             m_players.begin(), m_players.end(),
-             [](const auto& a, const auto& b) { return a.second.ping < b.second.ping; })
-      ->second.ping;
+  return std::ranges::max_element(m_players, [](const auto& a, const auto& b) {
+    return a.second.ping < b.second.ping;
+  })->second.ping;
 }
 
 void NetPlayClient::Disconnect()
@@ -2412,9 +2411,9 @@ bool NetPlayClient::IsFirstInGamePad(int ingame_pad) const
 static int CountLocalPads(const PadMappingArray& pad_map, const PlayerId& local_player_pid)
 {
   return static_cast<int>(
-      std::count_if(pad_map.begin(), pad_map.end(), [&local_player_pid](const auto& mapping) {
-        return mapping == local_player_pid;
-      }));
+    std::ranges::count_if(pad_map, [&local_player_pid](const auto& mapping) {
+      return mapping == local_player_pid;
+    }));
 }
 
 int NetPlayClient::NumLocalPads() const

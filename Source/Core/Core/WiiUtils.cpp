@@ -743,10 +743,11 @@ UpdateResult DiscSystemUpdater::DoDiscUpdate()
     return UpdateResult::RegionMismatch;
 
   const auto partitions = m_volume->GetPartitions();
-  const auto update_partition =
-      std::find_if(partitions.cbegin(), partitions.cend(), [&](const DiscIO::Partition& partition) {
-        return m_volume->GetPartitionType(partition) == 1u;
-      });
+  const auto update_partition = std::ranges::find_if(partitions,
+                                                     [&](const DiscIO::Partition& partition) {
+                                                       return m_volume->GetPartitionType(partition)
+                                                              == 1u;
+                                                     });
 
   if (update_partition == partitions.cend())
   {

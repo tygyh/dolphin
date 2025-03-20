@@ -59,11 +59,11 @@ void SetActiveCodes(std::span<const GeckoCode> gcodes, const std::string& game_i
   {
     s_active_codes.reserve(gcodes.size());
 
-    std::copy_if(gcodes.begin(), gcodes.end(), std::back_inserter(s_active_codes),
-                 [&game_id, &revision](const GeckoCode& code) {
-                   return code.enabled && AchievementManager::GetInstance().CheckApprovedGeckoCode(
-                                              code, game_id, revision);
-                 });
+    std::ranges::copy_if(gcodes, std::back_inserter(s_active_codes),
+                         [&game_id, &revision](const GeckoCode& code) {
+                           return code.enabled && AchievementManager::GetInstance().
+                                  CheckApprovedGeckoCode(code, game_id, revision);
+                         });
   }
   s_active_codes.shrink_to_fit();
 
@@ -81,8 +81,8 @@ void UpdateSyncedCodes(std::span<const GeckoCode> gcodes)
 {
   s_synced_codes.clear();
   s_synced_codes.reserve(gcodes.size());
-  std::copy_if(gcodes.begin(), gcodes.end(), std::back_inserter(s_synced_codes),
-               [](const GeckoCode& code) { return code.enabled; });
+  std::ranges::copy_if(gcodes, std::back_inserter(s_synced_codes),
+                       [](const GeckoCode& code) { return code.enabled; });
   s_synced_codes.shrink_to_fit();
 }
 
@@ -94,8 +94,8 @@ std::vector<GeckoCode> SetAndReturnActiveCodes(std::span<const GeckoCode> gcodes
   if (Config::AreCheatsEnabled())
   {
     s_active_codes.reserve(gcodes.size());
-    std::copy_if(gcodes.begin(), gcodes.end(), std::back_inserter(s_active_codes),
-                 [](const GeckoCode& code) { return code.enabled; });
+    std::ranges::copy_if(gcodes, std::back_inserter(s_active_codes),
+                         [](const GeckoCode& code) { return code.enabled; });
   }
   s_active_codes.shrink_to_fit();
 

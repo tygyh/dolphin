@@ -561,7 +561,7 @@ void RenderWidget::PassEventToPresenter(const QEvent* event)
   case QEvent::MouseButtonPress:
   case QEvent::MouseButtonRelease:
   {
-    const u32 button_mask = static_cast<u32>(static_cast<const QMouseEvent*>(event)->buttons());
+    const u32 button_mask = static_cast<const QMouseEvent*>(event)->buttons();
     g_presenter->SetMousePress(button_mask);
   }
   break;

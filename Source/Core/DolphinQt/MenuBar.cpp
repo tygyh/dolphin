@@ -1394,7 +1394,7 @@ void MenuBar::GenerateSymbolsFromRSO()
   const Core::CPUThreadGuard guard(system);
 
   RSOChainView rso_chain;
-  if (rso_chain.Load(guard, static_cast<u32>(address)))
+  if (rso_chain.Load(guard, address))
   {
     rso_chain.Apply(guard, &system.GetPPCSymbolDB());
     emit Host::GetInstance()->PPCSymbolsChanged();

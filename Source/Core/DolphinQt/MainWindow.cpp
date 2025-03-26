@@ -1692,7 +1692,7 @@ bool MainWindow::eventFilter(QObject* object, QEvent* event)
     if (RequestStop() && object == this)
       m_exit_requested = true;
 
-    static_cast<QCloseEvent*>(event)->ignore();
+    event->ignore();
     return true;
   }
 

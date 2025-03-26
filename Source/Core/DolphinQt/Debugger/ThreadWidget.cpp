@@ -110,7 +110,7 @@ void ThreadWidget::ConnectWidgets()
 
 void ThreadWidget::ShowContextMenu(QTableWidget* table)
 {
-  const auto* item = static_cast<QTableWidgetItem*>(table->currentItem());
+  const auto* item = table->currentItem();
   if (item == nullptr)
     return;
 

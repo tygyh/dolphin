@@ -218,7 +218,7 @@ void BreakpointWidget::OnClicked(QTableWidgetItem* item)
     return;
   }
 
-  const u32 address = static_cast<u32>(m_table->item(item->row(), 0)->data(ADDRESS_ROLE).toUInt());
+  const u32 address = m_table->item(item->row(), 0)->data(ADDRESS_ROLE).toUInt();
 
   if (item->column() == ENABLED_COLUMN)
   {
@@ -514,7 +514,7 @@ void BreakpointWidget::OnContextMenu(const QPoint& pos)
   if (selected_item == nullptr)
     return;
 
-  const auto bp_address = static_cast<u32>(selected_item->data(ADDRESS_ROLE).toUInt());
+  const auto bp_address = selected_item->data(ADDRESS_ROLE).toUInt();
   const auto is_memory_breakpoint = selected_item->data(IS_MEMCHECK_ROLE).toBool();
 
   auto* menu = new QMenu(this);
@@ -563,7 +563,7 @@ void BreakpointWidget::OnItemChanged(QTableWidgetItem* item)
 
   const bool is_code_bp = !m_table->item(item->row(), 0)->data(IS_MEMCHECK_ROLE).toBool();
   const u32 base_address =
-      static_cast<u32>(m_table->item(item->row(), 0)->data(ADDRESS_ROLE).toUInt());
+      m_table->item(item->row(), 0)->data(ADDRESS_ROLE).toUInt();
 
   if (is_code_bp)
   {
@@ -574,8 +574,7 @@ void BreakpointWidget::OnItemChanged(QTableWidgetItem* item)
   }
   else
   {
-    const u32 end_address = static_cast<u32>(
-        m_table->item(item->row(), END_ADDRESS_COLUMN)->data(ADDRESS_ROLE).toUInt());
+    const u32 end_address = m_table->item(item->row(), END_ADDRESS_COLUMN)->data(ADDRESS_ROLE).toUInt();
 
     // Need to check that the start/base address is always <= end_address.
     if ((item->column() == ADDRESS_COLUMN && new_address == base_address) ||

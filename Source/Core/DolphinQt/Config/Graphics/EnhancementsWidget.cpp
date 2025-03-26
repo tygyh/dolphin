@@ -123,7 +123,7 @@ void EnhancementsWidget::CreateWidgets()
   m_ir_combo->setMaxVisibleItems(visible_resolution_option_count);
 
   m_aa_combo = new ConfigComplexChoice(Config::GFX_MSAA, Config::GFX_SSAA, m_game_layer);
-  m_aa_combo->Add(tr("None"), (u32)1, false);
+  m_aa_combo->Add(tr("None"), 1, false);
 
   m_texture_filtering_combo =
       new ConfigComplexChoice(Config::GFX_ENHANCE_MAX_ANISOTROPY,
@@ -419,7 +419,7 @@ void EnhancementsWidget::UpdateAAOptions()
   const QSignalBlocker blocker_aa(m_aa_combo);
 
   m_aa_combo->Reset();
-  m_aa_combo->Add(tr("None"), (u32)1, false);
+  m_aa_combo->Add(tr("None"), 1, false);
 
   const std::vector<u32>& aa_modes = g_backend_info.AAModes;
   for (const u32 aa_mode : aa_modes)

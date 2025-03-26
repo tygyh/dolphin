@@ -327,9 +327,9 @@ QVariant JitBlockTableModel::SortRoleData(const QModelIndex& index) const
   case Column::EffectiveAddress:
     return jit_block.effectiveAddress;
   case Column::CodeBufferSize:
-    return static_cast<qulonglong>(jit_block.originalSize);
+    return jit_block.originalSize;
   case Column::RepeatInstructions:
-    return static_cast<qulonglong>(jit_block.originalSize - jit_block.physical_addresses.size());
+    return jit_block.originalSize - jit_block.physical_addresses.size();
   case Column::HostNearCodeSize:
     return static_cast<qulonglong>(jit_block.near_end - jit_block.near_begin);
   case Column::HostFarCodeSize:
@@ -341,10 +341,10 @@ QVariant JitBlockTableModel::SortRoleData(const QModelIndex& index) const
   switch (column)
   {
   case Column::RunCount:
-    return static_cast<qulonglong>(profile_data->run_count);
+    return profile_data->run_count;
   case Column::CyclesSpent:
   case Column::CyclesPercent:
-    return static_cast<qulonglong>(profile_data->cycles_spent);
+    return profile_data->cycles_spent;
   case Column::CyclesAverage:
     if (profile_data->run_count == 0)
       return QVariant();

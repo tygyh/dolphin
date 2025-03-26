@@ -46,12 +46,12 @@ TEST(SPSCQueue, MultiThreaded)
 {
   Common::SPSCQueue<u32> q;
 
-  auto inserter = [&q]() {
+  auto inserter = [&q] {
     for (u32 i = 0; i < 100000; ++i)
       q.Push(i);
   };
 
-  auto popper = [&q]() {
+  auto popper = [&q] {
     for (u32 i = 0; i < 100000; ++i)
     {
       while (q.Empty())

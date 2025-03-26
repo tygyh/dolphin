@@ -391,7 +391,7 @@ void MenuBar::AddStateLoadMenu(QMenu* emu_menu)
   {
     QAction* action = m_state_load_slots_menu->addAction(QString{});
 
-    connect(action, &QAction::triggered, this, [=, this]() { emit StateLoadSlotAt(i); });
+    connect(action, &QAction::triggered, this, [=, this] { emit StateLoadSlotAt(i); });
   }
 }
 
@@ -408,7 +408,7 @@ void MenuBar::AddStateSaveMenu(QMenu* emu_menu)
   {
     QAction* action = m_state_save_slots_menu->addAction(QString{});
 
-    connect(action, &QAction::triggered, this, [=, this]() { emit StateSaveSlotAt(i); });
+    connect(action, &QAction::triggered, this, [=, this] { emit StateSaveSlotAt(i); });
   }
 }
 
@@ -425,7 +425,7 @@ void MenuBar::AddStateSlotMenu(QMenu* emu_menu)
     if (Settings::Instance().GetStateSlot() == i)
       action->setChecked(true);
 
-    connect(action, &QAction::triggered, this, [=, this]() { emit SetStateSlot(i); });
+    connect(action, &QAction::triggered, this, [=, this] { emit SetStateSlot(i); });
     connect(this, &MenuBar::SetStateSlot, [action, i](const int slot) {
       if (slot == i)
         action->setChecked(true);
@@ -613,7 +613,7 @@ void MenuBar::AddOptionsMenu()
 
   m_reset_ignore_panic_handler = options_menu->addAction(tr("Reset Ignore Panic Handler"));
 
-  connect(m_reset_ignore_panic_handler, &QAction::triggered, this, []() {
+  connect(m_reset_ignore_panic_handler, &QAction::triggered, this, [] {
     Config::DeleteKey(Config::LayerType::CurrentRun, Config::MAIN_USE_PANIC_HANDLERS);
   });
 
@@ -636,17 +636,17 @@ void MenuBar::AddHelpMenu()
 
   QAction* website = help_menu->addAction(tr("&Website"));
   connect(website, &QAction::triggered, this,
-          []() { QDesktopServices::openUrl(QUrl(QStringLiteral("https://dolphin-emu.org/"))); });
+          [] { QDesktopServices::openUrl(QUrl(QStringLiteral("https://dolphin-emu.org/"))); });
   QAction* documentation = help_menu->addAction(tr("Online &Documentation"));
-  connect(documentation, &QAction::triggered, this, []() {
+  connect(documentation, &QAction::triggered, this, [] {
     QDesktopServices::openUrl(QUrl(QStringLiteral("https://dolphin-emu.org/docs/guides")));
   });
   QAction* github = help_menu->addAction(tr("&GitHub Repository"));
-  connect(github, &QAction::triggered, this, []() {
+  connect(github, &QAction::triggered, this, [] {
     QDesktopServices::openUrl(QUrl(QStringLiteral("https://github.com/dolphin-emu/dolphin")));
   });
   QAction* bugtracker = help_menu->addAction(tr("&Bug Tracker"));
-  connect(bugtracker, &QAction::triggered, this, []() {
+  connect(bugtracker, &QAction::triggered, this, [] {
     QDesktopServices::openUrl(
         QUrl(QStringLiteral("https://bugs.dolphin-emu.org/projects/emulator")));
   });

@@ -495,7 +495,7 @@ void GekkoIRPlugin::AddBinaryEvaluator(u32 (*evaluator)(u32, u32))
   m_fixup_stack.pop();
   std::function<u32()> lhs = std::move(m_fixup_stack.top());
   m_fixup_stack.pop();
-  m_fixup_stack.emplace([evaluator, lhs = std::move(lhs), rhs = std::move(rhs)]() {
+  m_fixup_stack.emplace([evaluator, lhs = std::move(lhs), rhs = std::move(rhs)] {
     return evaluator(lhs(), rhs());
   });
 }
@@ -504,7 +504,7 @@ void GekkoIRPlugin::AddUnaryEvaluator(u32 (*evaluator)(u32))
 {
   std::function<u32()> sub = std::move(m_fixup_stack.top());
   m_fixup_stack.pop();
-  m_fixup_stack.emplace([evaluator, sub = std::move(sub)]() { return evaluator(sub()); });
+  m_fixup_stack.emplace([evaluator, sub = std::move(sub)] { return evaluator(sub()); });
 }
 
 void GekkoIRPlugin::AddAbsoluteAddressConv()

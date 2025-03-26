@@ -1664,7 +1664,7 @@ RcTcacheEntry TextureCacheBase::CreateTextureEntry(
   RcTcacheEntry entry;
   if (!assets_data.empty())
   {
-    const auto calculate_max_levels = [&]() {
+    const auto calculate_max_levels = [&] {
       const auto max_element = std::max_element(
           assets_data.begin(), assets_data.end(), [](const auto& lhs, const auto& rhs) {
             return lhs->m_texture.m_slices[0].m_levels.size() <

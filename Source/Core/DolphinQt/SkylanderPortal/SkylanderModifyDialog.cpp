@@ -132,7 +132,6 @@ void SkylanderModifyDialog::PopulateSkylanderOptions(QVBoxLayout* layout)
   auto* edit_hero =
       new QLineEdit(QStringLiteral("%1").arg(m_figure_data.skylander_data.hero_level));
 
-  auto toUtf16 = QStringDecoder(QStringDecoder::Utf16);
   auto* hbox_nick = new QHBoxLayout();
   auto* label_nick = new QLabel(tr("Nickname:"));
   auto* edit_nick = new QLineEdit(QString::fromUtf16(
@@ -213,7 +212,7 @@ void SkylanderModifyDialog::PopulateSkylanderOptions(QVBoxLayout* layout)
   layout->addLayout(hbox_last_reset);
   layout->addLayout(hbox_last_placed);
 
-  connect(m_buttons, &QDialogButtonBox::accepted, this, [=, this]() {
+  connect(m_buttons, &QDialogButtonBox::accepted, this, [=, this] {
     if (!edit_money->hasAcceptableInput())
     {
       QMessageBox::warning(this, tr("Incorrect money value!"),
@@ -326,7 +325,7 @@ bool SkylanderModifyDialog::PopulateTrophyOptions(QVBoxLayout* layout)
     layout->addLayout(hbox);
   }
 
-  connect(m_buttons, &QDialogButtonBox::accepted, this, [=, this]() {
+  connect(m_buttons, &QDialogButtonBox::accepted, this, [=, this] {
     m_figure_data.trophy_data.unlocked_villains = 0x0;
     for (size_t i = 0; i < MAX_VILLAINS; ++i)
       m_figure_data.trophy_data.unlocked_villains |=

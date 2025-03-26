@@ -533,7 +533,7 @@ void MainWindow::ConnectMenuBar()
 
   // Emulation
   connect(m_menu_bar, &MenuBar::Pause, this, &MainWindow::Pause);
-  connect(m_menu_bar, &MenuBar::Play, this, [this]() { Play(); });
+  connect(m_menu_bar, &MenuBar::Play, this, [this] { Play(); });
   connect(m_menu_bar, &MenuBar::Stop, this, &MainWindow::RequestStop);
   connect(m_menu_bar, &MenuBar::Reset, this, &MainWindow::Reset);
   connect(m_menu_bar, &MenuBar::Fullscreen, this, &MainWindow::FullScreen);
@@ -689,7 +689,7 @@ void MainWindow::ConnectToolBar()
   connect(m_tool_bar, &ToolBar::OpenPressed, this, &MainWindow::Open);
   connect(m_tool_bar, &ToolBar::RefreshPressed, this, &MainWindow::RefreshGameList);
 
-  connect(m_tool_bar, &ToolBar::PlayPressed, this, [this]() { Play(); });
+  connect(m_tool_bar, &ToolBar::PlayPressed, this, [this] { Play(); });
   connect(m_tool_bar, &ToolBar::PausePressed, this, &MainWindow::Pause);
   connect(m_tool_bar, &ToolBar::StopPressed, this, &MainWindow::RequestStop);
   connect(m_tool_bar, &ToolBar::FullScreenPressed, this, &MainWindow::FullScreen);
@@ -708,7 +708,7 @@ void MainWindow::ConnectToolBar()
 
 void MainWindow::ConnectGameList()
 {
-  connect(m_game_list, &GameList::GameSelected, this, [this]() { Play(); });
+  connect(m_game_list, &GameList::GameSelected, this, [this] { Play(); });
   connect(m_game_list, &GameList::NetPlayHost, this, &MainWindow::NetPlayHost);
   connect(m_game_list, &GameList::OnStartWithRiivolution, this,
           &MainWindow::ShowRiivolutionBootWidget);

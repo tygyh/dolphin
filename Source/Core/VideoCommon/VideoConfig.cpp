@@ -57,7 +57,7 @@ void VideoConfig::Refresh()
     // invalid values. Instead, pause the video thread first, update the config and correct
     // it, then resume emulation, after which the video thread will detect the config has
     // changed and act accordingly.
-    CPUThreadConfigCallback::AddConfigChangedCallback([]() {
+    CPUThreadConfigCallback::AddConfigChangedCallback([] {
       auto& system = Core::System::GetInstance();
 
       const bool lock_gpu_thread = Core::IsRunning(system);

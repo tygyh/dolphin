@@ -64,7 +64,7 @@ std::optional<IPCReply> USB_HIDv4::IOCtl(const IOCtlRequest& request)
     if (!device->Attach())
       return IPCReply(IPC_EINVAL);
     return HandleTransfer(device, request.request,
-                          [&, this]() { return SubmitTransfer(*device, request); });
+                          [&, this] { return SubmitTransfer(*device, request); });
   }
   default:
     request.DumpUnknown(GetSystem(), GetDeviceName(), Common::Log::LogType::IOS_USB);

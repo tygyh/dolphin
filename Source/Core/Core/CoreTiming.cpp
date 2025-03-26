@@ -82,7 +82,7 @@ void CoreTimingManager::UnregisterAllEvents()
 void CoreTimingManager::Init()
 {
   m_registered_config_callback_id =
-      CPUThreadConfigCallback::AddConfigChangedCallback([this]() { RefreshConfig(); });
+      CPUThreadConfigCallback::AddConfigChangedCallback([this] { RefreshConfig(); });
   RefreshConfig();
 
   m_last_oc_factor = m_config_oc_factor;

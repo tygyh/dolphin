@@ -64,7 +64,7 @@ void SearchBar::ConnectWidgets()
   connect(m_close_button, &QPushButton::clicked, this, &SearchBar::Hide);
 }
 
-bool SearchBar::eventFilter(QObject* object, QEvent* event)
+bool SearchBar::eventFilter(QEvent* event)
 {
   if (event->type() == QEvent::KeyPress)
   {

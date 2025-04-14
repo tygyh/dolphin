@@ -113,7 +113,7 @@ BalloonTip::BalloonTip(PrivateTag, const QString& title, QString message, QWidge
     create_label(message);
 }
 
-void BalloonTip::paintEvent(QPaintEvent*)
+void BalloonTip::paintEvent()
 {
   QPainter painter(this);
   painter.drawPixmap(rect(), m_pixmap);

@@ -19,7 +19,7 @@ QSize AsmEditor::LineNumberArea::sizeHint() const
   return QSize(asm_editor->LineNumberAreaWidth(), 0);
 }
 
-void AsmEditor::LineNumberArea::paintEvent(QPaintEvent* event)
+void AsmEditor::LineNumberArea::paintEvent()
 {
   asm_editor->LineNumberAreaPaintEvent(event);
 }

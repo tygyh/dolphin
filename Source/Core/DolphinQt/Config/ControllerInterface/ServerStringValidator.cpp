@@ -7,7 +7,7 @@ ServerStringValidator::ServerStringValidator(QObject* parent) : QValidator(paren
 {
 }
 
-QValidator::State ServerStringValidator::validate(QString& input, int& pos) const
+QValidator::State ServerStringValidator::validate(QString& input) const
 {
   if (input.isEmpty())
     return Invalid;

@@ -234,7 +234,7 @@ public:
   void StoreDCacheLine(u32 address);
   void InvalidateDCacheLine(u32 address);
   void FlushDCacheLine(u32 address);
-  void TouchDCacheLine(u32 address, bool store);
+  void TouchDCacheLine(u32 address);
 
   // TLB functions
   void SDRUpdated();

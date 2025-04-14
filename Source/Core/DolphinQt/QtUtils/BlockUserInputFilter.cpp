@@ -27,7 +27,7 @@ void BlockKeyboardInputFilter::ScheduleRemoval()
   timer->start(REMOVAL_DELAY);
 }
 
-bool BlockKeyboardInputFilter::eventFilter(QObject* object, QEvent* event)
+bool BlockKeyboardInputFilter::eventFilter(QEvent* event)
 {
   const auto event_type = event->type();
   return event_type == QEvent::KeyPress || event_type == QEvent::KeyRelease;

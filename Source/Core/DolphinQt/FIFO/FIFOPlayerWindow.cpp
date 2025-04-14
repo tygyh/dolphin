@@ -409,7 +409,7 @@ void FIFOPlayerWindow::UpdateControls()
   m_save->setEnabled(m_fifo_recorder.IsRecordingDone());
 }
 
-bool FIFOPlayerWindow::eventFilter(QObject* object, QEvent* event)
+bool FIFOPlayerWindow::eventFilter(QEvent* event)
 {
   // Close when escape is pressed
   if (event->type() == QEvent::KeyPress)

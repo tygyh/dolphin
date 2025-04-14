@@ -74,8 +74,7 @@ VertexShaderUid GetVertexShaderUid()
   return out;
 }
 
-static void WriteTexCoordTransforms(APIType api_type, const ShaderHostConfig& host_config,
-                                    const vertex_shader_uid_data* uid_data, ShaderCode& out)
+static void WriteTexCoordTransforms(const vertex_shader_uid_data* uid_data, ShaderCode& out)
 {
   for (u32 i = 0; i < uid_data->numTexGens; ++i)
   {
@@ -336,7 +335,7 @@ ShaderCode GenerateVertexShaderCode(APIType api_type, const ShaderHostConfig& ho
     }
   }
 
-  WriteTexCoordTransforms(api_type, host_config, uid_data, out);
+  WriteTexCoordTransforms(uid_data, out);
 
   out.Write("void main()\n{{\n");
 

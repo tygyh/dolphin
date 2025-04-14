@@ -453,7 +453,7 @@ std::optional<IPCReply> FSDevice::IOCtl(const IOCtlRequest& request)
   switch (request.request)
   {
   case ISFS_IOCTL_FORMAT:
-    return Format(it->second, request);
+    return Format(it->second);
   case ISFS_IOCTL_GETSTATS:
     return GetStats(it->second, request);
   case ISFS_IOCTL_CREATEDIR:
@@ -496,7 +496,7 @@ std::optional<IPCReply> FSDevice::IOCtlV(const IOCtlVRequest& request)
   }
 }
 
-IPCReply FSDevice::Format(const Handle& handle, const IOCtlRequest& request)
+IPCReply FSDevice::Format(const Handle& handle)
 {
   if (handle.uid != 0)
     return GetFSReply(ConvertResult(ResultCode::AccessDenied));

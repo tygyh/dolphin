@@ -134,7 +134,7 @@ void Interpreter::HLEFunction(Interpreter& interpreter, UGeckoInstruction inst)
   ASSERT(Core::IsCPUThread());
   Core::CPUThreadGuard guard(interpreter.m_system);
 
-  HLE::Execute(guard, interpreter.m_ppc_state.pc, inst.hex);
+  HLE::Execute(guard, inst.hex);
 }
 
 void Interpreter::rfi(Interpreter& interpreter, UGeckoInstruction inst)

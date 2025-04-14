@@ -39,7 +39,7 @@ static Common::FatFsCallbacks* s_callbacks;
 
 namespace
 {
-int SDCardDiskRead(File::IOFile* image, u8 pdrv, u8* buff, u32 sector, unsigned int count)
+int SDCardDiskRead(File::IOFile* image, u8* buff, u32 sector, unsigned int count)
 {
   const u64 offset = static_cast<u64>(sector) * SECTOR_SIZE;
   if (!image->Seek(offset, File::SeekOrigin::Begin))
@@ -58,7 +58,7 @@ int SDCardDiskRead(File::IOFile* image, u8 pdrv, u8* buff, u32 sector, unsigned 
   return RES_OK;
 }
 
-int SDCardDiskWrite(File::IOFile* image, u8 pdrv, const u8* buff, u32 sector, unsigned int count)
+int SDCardDiskWrite(File::IOFile* image, const u8* buff, u32 sector, unsigned int count)
 {
   const u64 offset = static_cast<u64>(sector) * SECTOR_SIZE;
   if (!image->Seek(offset, File::SeekOrigin::Begin))
@@ -77,7 +77,7 @@ int SDCardDiskWrite(File::IOFile* image, u8 pdrv, const u8* buff, u32 sector, un
   return RES_OK;
 }
 
-int SDCardDiskIOCtl(File::IOFile* image, u8 pdrv, u8 cmd, void* buff)
+int SDCardDiskIOCtl(File::IOFile* image, u8 cmd, void* buff)
 {
   switch (cmd)
   {
@@ -141,17 +141,17 @@ class SDCardFatFsCallbacks : public Common::FatFsCallbacks
 public:
   int DiskRead(u8 pdrv, u8* buff, u32 sector, unsigned int count) override
   {
-    return SDCardDiskRead(m_image, pdrv, buff, sector, count);
+    return SDCardDiskRead(m_image, buff, sector, count);
   }
 
   int DiskWrite(u8 pdrv, const u8* buff, u32 sector, unsigned int count) override
   {
-    return SDCardDiskWrite(m_image, pdrv, buff, sector, count);
+    return SDCardDiskWrite(m_image, buff, sector, count);
   }
 
   int DiskIOCtl(u8 pdrv, u8 cmd, void* buff) override
   {
-    return SDCardDiskIOCtl(m_image, pdrv, cmd, buff);
+    return SDCardDiskIOCtl(m_image, cmd, buff);
   }
 
   u32 GetCurrentTimeFAT() override

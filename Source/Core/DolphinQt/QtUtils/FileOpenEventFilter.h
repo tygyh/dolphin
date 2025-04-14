@@ -15,5 +15,5 @@ signals:
   void fileOpened(const QString& file_name);
 
 private:
-  bool eventFilter(QObject* object, QEvent* event) override;
+  bool eventFilter(QEvent* event) override;
 };

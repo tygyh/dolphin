@@ -47,7 +47,7 @@ bool SymbolDB::IsEmpty() const
   return m_functions.empty();
 }
 
-void SymbolDB::Clear(const char* prefix)
+void SymbolDB::Clear()
 {
   // TODO: honor prefix
   m_functions.clear();

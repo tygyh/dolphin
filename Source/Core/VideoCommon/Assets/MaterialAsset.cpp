@@ -268,15 +268,15 @@ void MaterialProperty::WriteAsShaderCode(ShaderCode& shader_source,
     }
   };
   std::visit(overloaded{[&](const CustomAssetLibrary::AssetID&) {},
-                        [&](s32 value) { write_shader("int", 1); },
-                        [&](const std::array<s32, 2>& value) { write_shader("int", 2); },
-                        [&](const std::array<s32, 3>& value) { write_shader("int", 3); },
-                        [&](const std::array<s32, 4>& value) { write_shader("int", 4); },
-                        [&](float value) { write_shader("float", 1); },
-                        [&](const std::array<float, 2>& value) { write_shader("float", 2); },
-                        [&](const std::array<float, 3>& value) { write_shader("float", 3); },
-                        [&](const std::array<float, 4>& value) { write_shader("float", 4); },
-                        [&](bool value) { write_shader("bool", 1); }},
+                        [&](s32) { write_shader("int", 1); },
+                        [&](const std::array<s32, 2>&) { write_shader("int", 2); },
+                        [&](const std::array<s32, 3>&) { write_shader("int", 3); },
+                        [&](const std::array<s32, 4>&) { write_shader("int", 4); },
+                        [&](float) { write_shader("float", 1); },
+                        [&](const std::array<float, 2>&) { write_shader("float", 2); },
+                        [&](const std::array<float, 3>&) { write_shader("float", 3); },
+                        [&](const std::array<float, 4>&) { write_shader("float", 4); },
+                        [&](bool) { write_shader("bool", 1); }},
              property.m_value);
 }
 

@@ -493,7 +493,7 @@ std::optional<IPCReply> NetIPTopDevice::IOCtl(const IOCtlRequest& request)
   case IOCTL_SO_GETPEERNAME:
     return HandleGetPeerNameRequest(request);
   case IOCTL_SO_GETHOSTID:
-    return HandleGetHostIDRequest(request);
+    return HandleGetHostIDRequest();
   case IOCTL_SO_INETATON:
     return HandleInetAToNRequest(request);
   case IOCTL_SO_INETPTON:
@@ -505,7 +505,7 @@ std::optional<IPCReply> NetIPTopDevice::IOCtl(const IOCtlRequest& request)
   case IOCTL_SO_GETHOSTBYNAME:
     return LaunchAsyncTask(&NetIPTopDevice::HandleGetHostByNameRequest, request);
   case IOCTL_SO_ICMPCANCEL:
-    return HandleICMPCancelRequest(request);
+    return HandleICMPCancelRequest();
   default:
     request.DumpUnknown(GetSystem(), GetDeviceName(), Common::Log::LogType::IOS_NET);
     break;
@@ -783,7 +783,7 @@ IPCReply NetIPTopDevice::HandleGetPeerNameRequest(const IOCtlRequest& request)
   return IPCReply(ret);
 }
 
-IPCReply NetIPTopDevice::HandleGetHostIDRequest(const IOCtlRequest& request)
+IPCReply NetIPTopDevice::HandleGetHostIDRequest()
 {
   const DefaultInterface interface = GetSystemDefaultInterfaceOrFallback();
   const u32 host_ip = ntohl(interface.inet.s_addr);
@@ -994,7 +994,7 @@ IPCReply NetIPTopDevice::HandleGetHostByNameRequest(const IOCtlRequest& request)
   return IPCReply(0);
 }
 
-IPCReply NetIPTopDevice::HandleICMPCancelRequest(const IOCtlRequest& request)
+IPCReply NetIPTopDevice::HandleICMPCancelRequest()
 {
   ERROR_LOG_FMT(IOS_NET, "IOCTL_SO_ICMPCANCEL");
   return IPCReply(0);

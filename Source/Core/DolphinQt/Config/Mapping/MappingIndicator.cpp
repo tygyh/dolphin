@@ -315,7 +315,7 @@ void GenerateFibonacciSphere(int point_count, F&& callback)
 
 }  // namespace
 
-void MappingIndicator::paintEvent(QPaintEvent*)
+void MappingIndicator::paintEvent()
 {
   constexpr float max_elapsed_seconds = 0.1f;
 

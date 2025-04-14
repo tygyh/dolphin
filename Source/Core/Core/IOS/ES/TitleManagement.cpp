@@ -864,7 +864,7 @@ ReturnCode ESCore::ExportTitleDone(Context& context)
   return IPC_SUCCESS;
 }
 
-IPCReply ESDevice::ExportTitleDone(Context& context, const IOCtlVRequest& request)
+IPCReply ESDevice::ExportTitleDone(Context& context)
 {
   return IPCReply(m_core.ExportTitleDone(context));
 }

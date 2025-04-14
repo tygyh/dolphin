@@ -72,7 +72,7 @@ public:
   void FreeCodeSpace()
   {
     ASSERT(!m_is_child);
-    Common::FreeMemoryPages(region, total_region_size);
+    Common::FreeMemoryPages(region);
     region = nullptr;
     region_size = 0;
     total_region_size = 0;

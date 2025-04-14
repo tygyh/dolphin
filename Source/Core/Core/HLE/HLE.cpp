@@ -162,7 +162,7 @@ void Reload(Core::System& system)
   PatchFunctions(system);
 }
 
-void Execute(const Core::CPUThreadGuard& guard, u32 current_pc, u32 hook_index)
+void Execute(const Core::CPUThreadGuard& guard, u32 hook_index)
 {
   hook_index &= 0xFFFFF;
   if (hook_index > 0 && hook_index < os_patches.size())
@@ -179,7 +179,7 @@ void ExecuteFromJIT(u32 current_pc, u32 hook_index, Core::System& system)
 {
   ASSERT(Core::IsCPUThread());
   Core::CPUThreadGuard guard(system);
-  Execute(guard, current_pc, hook_index);
+  Execute(guard, hook_index);
 }
 
 u32 GetHookByAddress(u32 address)

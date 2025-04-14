@@ -22,7 +22,7 @@ public slots:
   void SetY(u16 y);
 
 protected:
-  void paintEvent(QPaintEvent* event) override;
+  void paintEvent() override;
   void mousePressEvent(QMouseEvent* event) override;
   void mouseMoveEvent(QMouseEvent* event) override;
   void handleMouseEvent(QMouseEvent* event);

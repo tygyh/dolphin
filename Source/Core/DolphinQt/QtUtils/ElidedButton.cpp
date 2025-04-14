@@ -33,7 +33,7 @@ QSize ElidedButton::sizeHint() const
   return QPushButton(parentWidget()).sizeHint();
 }
 
-void ElidedButton::paintEvent(QPaintEvent* event)
+void ElidedButton::paintEvent()
 {
   QStyleOptionButton option;
   initStyleOption(&option);

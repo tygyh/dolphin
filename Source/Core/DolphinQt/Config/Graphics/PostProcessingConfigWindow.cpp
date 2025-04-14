@@ -154,7 +154,7 @@ void PostProcessingConfigWindow::UpdateBool(ConfigGroup* const config_group, con
   config_group->EnableSuboptions(state);
 }
 
-void PostProcessingConfigWindow::UpdateInteger(ConfigGroup* const config_group, const int value)
+void PostProcessingConfigWindow::UpdateInteger(ConfigGroup* const config_group)
 {
   const ConfigurationOption& config_option =
       m_post_processor->GetOption(config_group->GetOptionName());
@@ -171,7 +171,7 @@ void PostProcessingConfigWindow::UpdateInteger(ConfigGroup* const config_group, 
   }
 }
 
-void PostProcessingConfigWindow::UpdateFloat(ConfigGroup* const config_group, const int value)
+void PostProcessingConfigWindow::UpdateFloat(ConfigGroup* const config_group)
 {
   const ConfigurationOption& config_option =
       m_post_processor->GetOption(config_group->GetOptionName());
@@ -287,7 +287,7 @@ u32 PostProcessingConfigWindow::ConfigGroup::AddInteger(PostProcessingConfigWind
     slider->setValue(current_value);
     slider->setTickInterval(range / steps);
     QObject::connect(slider, &QSlider::valueChanged,
-                     [this, parent](int value) { parent->UpdateInteger(this, value); });
+                     [this, parent](int value) { parent->UpdateInteger(this); });
 
     auto* const value_box = new QLineEdit(QString::number(m_config_option->m_integer_values[i]));
     value_box->setEnabled(false);
@@ -326,7 +326,7 @@ u32 PostProcessingConfigWindow::ConfigGroup::AddFloat(PostProcessingConfigWindow
     slider->setValue(current_value);
     slider->setTickInterval(range / steps);
     QObject::connect(slider, &QSlider::valueChanged,
-                     [this, parent](int value) { parent->UpdateFloat(this, value); });
+                     [this, parent](int value) { parent->UpdateFloat(this); });
 
     auto* const value_box =
         new QLineEdit(QString::asprintf("%f", m_config_option->m_float_values[i]));

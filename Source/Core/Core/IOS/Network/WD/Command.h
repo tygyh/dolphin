@@ -155,7 +155,7 @@ private:
   static Status GetTargetStatusForMode(WD::Mode mode);
 
   IPCReply SetLinkState(const IOCtlVRequest& request);
-  IPCReply GetLinkState(const IOCtlVRequest& request) const;
+  IPCReply GetLinkState() const;
   IPCReply Disassociate(const IOCtlVRequest& request);
   IPCReply GetInfo(const IOCtlVRequest& request) const;
 

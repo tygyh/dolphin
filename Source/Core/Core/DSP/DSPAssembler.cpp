@@ -511,8 +511,7 @@ static u16 get_mask_shifted_down(u16 mask)
   return mask;
 }
 
-bool DSPAssembler::VerifyParams(const DSPOPCTemplate* opc, param_t* par, size_t count,
-                                OpcodeType type)
+bool DSPAssembler::VerifyParams(const DSPOPCTemplate* opc, param_t* par, size_t count)
 {
   for (size_t i = 0; i < count; i++)
   {
@@ -1010,7 +1009,7 @@ bool DSPAssembler::AssemblePass(const std::string& text, int pass)
 
     opcode_size = opc->size;
 
-    VerifyParams(opc, params, params_count, OpcodeType::Primary);
+    VerifyParams(opc, params, params_count);
 
     const DSPOPCTemplate* opc_ext = nullptr;
     // Check for opcode extensions.
@@ -1020,7 +1019,7 @@ bool DSPAssembler::AssemblePass(const std::string& text, int pass)
       if (opcode_ext)
       {
         opc_ext = FindOpcode(opcode_ext, params_count_ext, OpcodeType::Extension);
-        VerifyParams(opc_ext, params_ext, params_count_ext, OpcodeType::Extension);
+        VerifyParams(opc_ext, params_ext, params_count_ext);
       }
       else if (params_count_ext)
       {

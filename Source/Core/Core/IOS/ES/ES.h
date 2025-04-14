@@ -341,7 +341,7 @@ private:
   IPCReply ExportContentBegin(Context& context, const IOCtlVRequest& request);
   IPCReply ExportContentData(Context& context, const IOCtlVRequest& request);
   IPCReply ExportContentEnd(Context& context, const IOCtlVRequest& request);
-  IPCReply ExportTitleDone(Context& context, const IOCtlVRequest& request);
+  IPCReply ExportTitleDone(Context& context);
   IPCReply DeleteTitle(const IOCtlVRequest& request);
   IPCReply DeleteTitleContent(const IOCtlVRequest& request);
   IPCReply DeleteTicket(const IOCtlVRequest& request);
@@ -364,7 +364,7 @@ private:
   IPCReply GetConsumption(const IOCtlVRequest& request);
   std::optional<IPCReply> Launch(const IOCtlVRequest& request);
   std::optional<IPCReply> LaunchBC(const IOCtlVRequest& request);
-  IPCReply DIVerify(const IOCtlVRequest& request);
+  IPCReply DIVerify();
   IPCReply SetUpStreamKey(const Context& context, const IOCtlVRequest& request);
   IPCReply DeleteStreamKey(const IOCtlVRequest& request);
 

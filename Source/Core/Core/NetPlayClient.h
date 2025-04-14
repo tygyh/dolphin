@@ -291,7 +291,7 @@ private:
   void OnPadBuffer(sf::Packet& packet);
   void OnHostInputAuthority(sf::Packet& packet);
   void OnGolfSwitch(sf::Packet& packet);
-  void OnGolfPrepare(sf::Packet& packet);
+  void OnGolfPrepare();
   void OnChangeGame(sf::Packet& packet);
   void OnGameStatus(sf::Packet& packet);
   void OnStartGame(sf::Packet& packet);

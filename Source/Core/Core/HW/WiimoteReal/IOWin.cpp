@@ -204,7 +204,7 @@ int IORead(HANDLE& dev_handle, OVERLAPPED& hid_overlap_read, u8* buf, int index)
 template <typename T>
 void ProcessWiimotes(bool new_scan, const T& callback);
 
-bool AttachWiimote(HANDLE hRadio, const BLUETOOTH_RADIO_INFO&, BLUETOOTH_DEVICE_INFO_STRUCT&);
+bool AttachWiimote(HANDLE hRadio, BLUETOOTH_DEVICE_INFO_STRUCT&);
 void RemoveWiimote(BLUETOOTH_DEVICE_INFO_STRUCT&);
 bool ForgetWiimote(BLUETOOTH_DEVICE_INFO_STRUCT&);
 
@@ -527,7 +527,7 @@ void WiimoteScannerWindows::FindWiimotes(std::vector<Wiimote*>& found_wiimotes,
   ProcessWiimotes(true, [](HANDLE hRadio, const BLUETOOTH_RADIO_INFO& rinfo,
                            BLUETOOTH_DEVICE_INFO_STRUCT& btdi) {
     ForgetWiimote(btdi);
-    AttachWiimote(hRadio, rinfo, btdi);
+    AttachWiimote(hRadio, btdi);
   });
 
   // Get the device id
@@ -889,8 +889,7 @@ void RemoveWiimote(BLUETOOTH_DEVICE_INFO_STRUCT& btdi)
   }
 }
 
-bool AttachWiimote(HANDLE hRadio, const BLUETOOTH_RADIO_INFO& radio_info,
-                   BLUETOOTH_DEVICE_INFO_STRUCT& btdi)
+bool AttachWiimote(HANDLE hRadio, BLUETOOTH_DEVICE_INFO_STRUCT& btdi)
 {
   // We don't want "remembered" devices.
   // SetServiceState will just fail with them..

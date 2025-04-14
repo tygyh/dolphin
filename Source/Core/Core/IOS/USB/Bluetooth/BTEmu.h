@@ -137,7 +137,7 @@ private:
   void CommandWriteInquiryMode(u32 input_address);
   void CommandWritePageScanType(u32 input_address);
   void CommandHostBufferSize(u32 input_address);
-  void CommandInquiryCancel(u32 input_address);
+  void CommandInquiryCancel();
   void CommandRemoteNameReq(u32 input_address);
   void CommandCreateCon(u32 input_address);
   void CommandAcceptCon(u32 input_address);

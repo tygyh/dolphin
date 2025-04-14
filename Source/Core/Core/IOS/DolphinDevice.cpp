@@ -204,7 +204,7 @@ IPCReply SetDiscordPresence(Core::System& system, const IOCtlVRequest& request)
   return IPCReply(IPC_SUCCESS);
 }
 
-IPCReply ResetDiscord(const IOCtlVRequest& request)
+IPCReply ResetDiscord()
 {
   if (!Config::Get(Config::MAIN_USE_DISCORD_PRESENCE))
     return IPCReply(IPC_EACCES);
@@ -294,7 +294,7 @@ std::optional<IPCReply> DolphinDevice::IOCtlV(const IOCtlVRequest& request)
   case IOCTL_DOLPHIN_DISCORD_SET_PRESENCE:
     return SetDiscordPresence(GetSystem(), request);
   case IOCTL_DOLPHIN_DISCORD_RESET:
-    return ResetDiscord(request);
+    return ResetDiscord();
   case IOCTL_DOLPHIN_GET_SYSTEM_TIME:
     return GetSystemTime(request);
 

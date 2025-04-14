@@ -62,7 +62,7 @@ private:
     QSize sizeHint() const override;
 
   protected:
-    void paintEvent(QPaintEvent* event) override;
+    void paintEvent() override;
 
   private:
     AsmEditor* asm_editor;

@@ -296,7 +296,7 @@ void VideoInterfaceManager::RegisterMMIO(MMIO::Mapping* mmio, u32 base)
         auto& vi = system.GetVideoInterface();
         return 1 + (vi.m_half_line_count) / 2;
       }),
-      MMIO::ComplexWrite<u16>([](Core::System& system, u32, u16 val) {
+      MMIO::ComplexWrite<u16>([](Core::System&, u32, u16 val) {
         WARN_LOG_FMT(
             VIDEOINTERFACE,
             "Changing vertical beam position to {:#06x} - not documented or implemented yet", val);
@@ -310,7 +310,7 @@ void VideoInterfaceManager::RegisterMMIO(MMIO::Mapping* mmio, u32 base)
                     (vi.GetTicksPerHalfLine()));
         return std::clamp<u16>(value, 1, vi.m_h_timing_0.HLW * 2);
       }),
-      MMIO::ComplexWrite<u16>([](Core::System& system, u32, u16 val) {
+      MMIO::ComplexWrite<u16>([](Core::System&, u32, u16 val) {
         WARN_LOG_FMT(
             VIDEOINTERFACE,
             "Changing horizontal beam position to {:#06x} - not documented or implemented yet",

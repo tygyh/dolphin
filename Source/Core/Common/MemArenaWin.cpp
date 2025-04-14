@@ -140,7 +140,7 @@ void* MemArena::CreateView(s64 offset, size_t size)
                          size, nullptr);
 }
 
-void MemArena::ReleaseView(void* view, size_t size)
+void MemArena::ReleaseView(void* view)
 {
   UnmapViewOfFile(view);
 }

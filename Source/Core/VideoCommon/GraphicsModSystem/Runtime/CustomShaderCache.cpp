@@ -281,7 +281,7 @@ void CustomShaderCache::QueuePixelShaderCompile(const PixelShaderUid& uid,
 
     bool Compile() override
     {
-      m_shader = m_shader_cache->CompilePixelShader(m_uid, m_custom_shaders);
+      m_shader = m_shader_cache->CompilePixelShader(m_uid);
       return true;
     }
 
@@ -319,7 +319,7 @@ void CustomShaderCache::QueuePixelShaderCompile(const UberShader::PixelShaderUid
 
     bool Compile() override
     {
-      m_shader = m_shader_cache->CompilePixelShader(m_uid, m_custom_shaders);
+      m_shader = m_shader_cache->CompilePixelShader(m_uid);
       return true;
     }
 
@@ -343,8 +343,7 @@ void CustomShaderCache::QueuePixelShaderCompile(const UberShader::PixelShaderUid
 }
 
 std::unique_ptr<AbstractShader>
-CustomShaderCache::CompilePixelShader(const PixelShaderUid& uid,
-                                      const CustomShaderInstance& custom_shaders) const
+CustomShaderCache::CompilePixelShader(const PixelShaderUid& uid) const
 {
   const ShaderCode source_code =
       GeneratePixelShaderCode(m_api_type, m_host_config, uid.GetUidData(), {});
@@ -353,8 +352,7 @@ CustomShaderCache::CompilePixelShader(const PixelShaderUid& uid,
 }
 
 std::unique_ptr<AbstractShader>
-CustomShaderCache::CompilePixelShader(const UberShader::PixelShaderUid& uid,
-                                      const CustomShaderInstance& custom_shaders) const
+CustomShaderCache::CompilePixelShader(const UberShader::PixelShaderUid& uid) const
 {
   const ShaderCode source_code = GenPixelShader(m_api_type, m_host_config, uid.GetUidData());
   return g_gfx->CreateShaderFromSource(ShaderStage::Pixel, source_code.GetBuffer(),

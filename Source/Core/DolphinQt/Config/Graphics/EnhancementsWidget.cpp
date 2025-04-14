@@ -50,7 +50,7 @@ EnhancementsWidget::EnhancementsWidget(GraphicsWindow* parent)
   });
 }
 
-EnhancementsWidget::EnhancementsWidget(GameConfigWidget* parent, Config::Layer* layer)
+EnhancementsWidget::EnhancementsWidget(GameConfigWidget*, Config::Layer* layer)
     : m_game_layer(layer)
 {
   CreateWidgets();

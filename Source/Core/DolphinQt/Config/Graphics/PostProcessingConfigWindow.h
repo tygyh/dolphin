@@ -67,8 +67,8 @@ private:
   QWidget* CreateDependentTab(const std::unique_ptr<ConfigGroup>& config_group);
   void PopulateGroups();
   void UpdateBool(ConfigGroup* config_group, bool state);
-  void UpdateInteger(ConfigGroup* config_group, int value);
-  void UpdateFloat(ConfigGroup* config_group, int value);
+  void UpdateInteger(ConfigGroup* config_group);
+  void UpdateFloat(ConfigGroup* config_group);
 
   QTabWidget* m_tabs;
   QDialogButtonBox* m_buttons;

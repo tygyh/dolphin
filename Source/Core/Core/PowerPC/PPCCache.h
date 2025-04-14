@@ -54,7 +54,7 @@ struct Cache
   void Store(Memory::MemoryManager& memory, u32 addr);
   void Invalidate(Memory::MemoryManager& memory, u32 addr);
   void Flush(Memory::MemoryManager& memory, u32 addr);
-  void Touch(Memory::MemoryManager& memory, u32 addr, bool store);
+  void Touch(Memory::MemoryManager& memory, u32 addr);
 
   void FlushAll(Memory::MemoryManager& memory);
 

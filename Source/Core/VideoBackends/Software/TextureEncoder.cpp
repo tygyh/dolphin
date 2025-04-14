@@ -1419,8 +1419,7 @@ static void EncodeZ24halfscale(u8* dst, const u8* src, EFBCopyFormat format)
 
 namespace
 {
-void EncodeEfbCopy(u8* dst, const EFBCopyParams& params, u32 native_width, u32 bytes_per_row,
-                   u32 num_blocks_y, u32 memory_stride, const MathUtil::Rectangle<int>& src_rect,
+void EncodeEfbCopy(u8* dst, const EFBCopyParams& params, const MathUtil::Rectangle<int>& src_rect,
                    bool scale_by_half)
 {
   const u8* src = EfbInterface::GetPixelPointer(src_rect.left, src_rect.top, params.depth);
@@ -1487,8 +1486,8 @@ void Encode(AbstractStagingTexture* dst, const EFBCopyParams& params, u32 native
   }
   else
   {
-    EncodeEfbCopy(reinterpret_cast<u8*>(dst->GetMappedPointer()), params, native_width,
-                  bytes_per_row, num_blocks_y, memory_stride, src_rect, scale_by_half);
+    EncodeEfbCopy(reinterpret_cast<u8*>(dst->GetMappedPointer()), params, src_rect,
+                  scale_by_half);
   }
 }
 }  // namespace TextureEncoder

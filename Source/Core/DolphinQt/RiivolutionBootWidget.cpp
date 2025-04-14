@@ -222,7 +222,7 @@ void RiivolutionBootWidget::MakeGUIForParsedFile(std::string path, std::string r
       if (option.m_selected_choice <= option.m_choices.size())
         selection->setCurrentIndex(static_cast<int>(option.m_selected_choice));
 
-      connect(selection, &QComboBox::currentIndexChanged, this, [this, selection](int idx) {
+      connect(selection, &QComboBox::currentIndexChanged, this, [this, selection](int) {
         const auto gui_index = selection->currentData().value<GuiRiivolutionPatchIndex>();
         auto& selected_disc = m_discs[gui_index.m_disc_index].disc;
         auto& selected_section = selected_disc.m_sections[gui_index.m_section_index];

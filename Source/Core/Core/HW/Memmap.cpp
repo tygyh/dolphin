@@ -349,7 +349,7 @@ void MemoryManager::Shutdown()
     if (!region.active)
       continue;
 
-    m_arena.ReleaseView(*region.out_pointer, region.size);
+    m_arena.ReleaseView(*region.out_pointer);
     *region.out_pointer = nullptr;
   }
   m_arena.ReleaseSHMSegment();

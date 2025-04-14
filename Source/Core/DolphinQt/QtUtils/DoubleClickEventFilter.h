@@ -15,5 +15,5 @@ signals:
   void doubleClicked();
 
 private:
-  bool eventFilter(QObject* object, QEvent* event) override;
+  bool eventFilter(QEvent* event) override;
 };

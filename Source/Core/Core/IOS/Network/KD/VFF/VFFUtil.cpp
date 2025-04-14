@@ -118,8 +118,7 @@ static FRESULT vff_mount(IOS::HLE::FS::FileHandle* vff, FATFS* fs)
   return FR_OK;
 }
 
-static DRESULT vff_read(IOS::HLE::FS::FileHandle* vff, BYTE pdrv, BYTE* buff, LBA_t sector,
-                        UINT count)
+static DRESULT vff_read(IOS::HLE::FS::FileHandle* vff, BYTE* buff, LBA_t sector, UINT count)
 {
   // We cannot read or write data to the 0th sector in a VFF.
   if (sector == 0)
@@ -145,7 +144,7 @@ static DRESULT vff_read(IOS::HLE::FS::FileHandle* vff, BYTE pdrv, BYTE* buff, LB
   return RES_OK;
 }
 
-static DRESULT vff_write(IOS::HLE::FS::FileHandle* vff, BYTE pdrv, const BYTE* buff, LBA_t sector,
+static DRESULT vff_write(IOS::HLE::FS::FileHandle* vff, const BYTE* buff, LBA_t sector,
                          UINT count)
 {
   if (sector == 0)
@@ -286,12 +285,12 @@ class VffFatFsCallbacks : public Common::FatFsCallbacks
 public:
   int DiskRead(u8 pdrv, u8* buff, u32 sector, unsigned int count) override
   {
-    return vff_read(m_vff, pdrv, buff, sector, count);
+    return vff_read(m_vff, buff, sector, count);
   }
 
   int DiskWrite(u8 pdrv, const u8* buff, u32 sector, unsigned int count) override
   {
-    return vff_write(m_vff, pdrv, buff, sector, count);
+    return vff_write(m_vff, buff, sector, count);
   }
 
   int DiskIOCtl(u8 pdrv, u8 cmd, void* buff) override { return vff_ioctl(m_vff, pdrv, cmd, buff); }

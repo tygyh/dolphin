@@ -160,7 +160,7 @@ void* AllocateAlignedMemory(size_t size, size_t alignment)
   return ptr;
 }
 
-bool FreeMemoryPages(void* ptr, size_t size)
+bool FreeMemoryPages(void* ptr)
 {
   if (ptr)
   {

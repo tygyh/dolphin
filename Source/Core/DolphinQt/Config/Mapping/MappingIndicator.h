@@ -48,7 +48,7 @@ protected:
   virtual void Update(float elapsed_seconds) {}
 
 private:
-  void paintEvent(QPaintEvent*) override;
+  void paintEvent() override;
 
   Clock::time_point m_last_update = Clock::now();
 };

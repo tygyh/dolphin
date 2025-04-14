@@ -50,7 +50,7 @@ private:
   void UpdateInfo();
   void UpdateLimits();
 
-  bool eventFilter(QObject* object, QEvent* event) final override;
+  bool eventFilter(QEvent* event) final override;
 
   FifoPlayer& m_fifo_player;
   FifoRecorder& m_fifo_recorder;

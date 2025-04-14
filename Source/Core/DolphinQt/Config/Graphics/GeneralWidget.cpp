@@ -46,7 +46,7 @@ GeneralWidget::GeneralWidget(GraphicsWindow* parent)
   OnEmulationStateChanged(!Core::IsUninitialized(Core::System::GetInstance()));
 }
 
-GeneralWidget::GeneralWidget(GameConfigWidget* parent, Config::Layer* layer) : m_game_layer(layer)
+GeneralWidget::GeneralWidget(GameConfigWidget*, Config::Layer* layer) : m_game_layer(layer)
 {
   CreateWidgets();
   ConnectWidgets();

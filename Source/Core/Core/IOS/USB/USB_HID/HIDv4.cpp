@@ -45,7 +45,7 @@ std::optional<IPCReply> USB_HIDv4::IOCtl(const IOCtlRequest& request)
   case USB::IOCTL_USBV4_GETDEVICECHANGE:
     return GetDeviceChange(request);
   case USB::IOCTL_USBV4_SHUTDOWN:
-    return Shutdown(request);
+    return Shutdown();
   case USB::IOCTL_USBV4_SET_SUSPEND:
     // Not implemented in IOS
     return IPCReply(IPC_SUCCESS);
@@ -105,7 +105,7 @@ std::optional<IPCReply> USB_HIDv4::GetDeviceChange(const IOCtlRequest& request)
   return std::nullopt;
 }
 
-IPCReply USB_HIDv4::Shutdown(const IOCtlRequest& request)
+IPCReply USB_HIDv4::Shutdown()
 {
   std::lock_guard lk{m_devicechange_hook_address_mutex};
   if (m_devicechange_hook_request != nullptr)

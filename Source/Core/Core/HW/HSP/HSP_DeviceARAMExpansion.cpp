@@ -23,7 +23,7 @@ CHSPDevice_ARAMExpansion::CHSPDevice_ARAMExpansion(HSPDeviceType device) : IHSPD
 
 CHSPDevice_ARAMExpansion::~CHSPDevice_ARAMExpansion()
 {
-  Common::FreeMemoryPages(m_ptr, m_size);
+  Common::FreeMemoryPages(m_ptr);
   m_ptr = nullptr;
 }
 

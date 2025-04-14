@@ -65,7 +65,7 @@ void AchievementManager::Init()
       rc_client_set_host(m_client, host_url.c_str());
     rc_client_set_event_handler(m_client, EventHandler);
     rc_client_enable_logging(m_client, RC_CLIENT_LOG_LEVEL_VERBOSE,
-                             [](const char* message, const rc_client_t* client) {
+                             [](const char* message, const rc_client_t*) {
                                INFO_LOG_FMT(ACHIEVEMENTS, "{}", message);
                              });
     Config::AddConfigChangedCallback([this] { SetHardcoreMode(); });
@@ -1135,8 +1135,7 @@ void AchievementManager::HandleAchievementProgressIndicatorShowEvent(
       UpdatedItems{.achievements = {client_event->achievement->id}});
 }
 
-void AchievementManager::HandleGameCompletedEvent(const rc_client_event_t* client_event,
-                                                  rc_client_t* client)
+void AchievementManager::HandleGameCompletedEvent(rc_client_t* client)
 {
   auto* user_info = rc_client_get_user_info(client);
   auto* game_info = rc_client_get_game_info(client);
@@ -1152,7 +1151,7 @@ void AchievementManager::HandleGameCompletedEvent(const rc_client_event_t* clien
                   &AchievementManager::GetInstance().GetGameBadge());
 }
 
-void AchievementManager::HandleResetEvent(const rc_client_event_t* client_event)
+void AchievementManager::HandleResetEvent()
 {
   INFO_LOG_FMT(ACHIEVEMENTS, "Reset requested by Achievement Manager");
   Core::Stop(Core::System::GetInstance());
@@ -1381,10 +1380,10 @@ void AchievementManager::EventHandler(const rc_client_event_t* event, rc_client_
     // unless the display algorithm changes in the future.
     break;
   case RC_CLIENT_EVENT_GAME_COMPLETED:
-    HandleGameCompletedEvent(event, client);
+    HandleGameCompletedEvent(client);
     break;
   case RC_CLIENT_EVENT_RESET:
-    HandleResetEvent(event);
+    HandleResetEvent();
     break;
   case RC_CLIENT_EVENT_SERVER_ERROR:
     HandleServerErrorEvent(event);

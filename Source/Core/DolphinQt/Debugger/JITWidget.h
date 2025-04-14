@@ -67,7 +67,7 @@ private:
   void hideEvent(QHideEvent* event) override;
 
   void UpdateProfilingButton();
-  void UpdateOtherButtons(Core::State state);
+  void UpdateOtherButtons();
   void UpdateDebugFont(const QFont& font);
   void ClearDisassembly();
   void ShowFreeMemoryStatus();

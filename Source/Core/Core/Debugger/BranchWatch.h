@@ -119,10 +119,10 @@ public:
   using SelectionInspection = BranchWatchSelectionInspection;
 
   bool GetRecordingActive() const { return m_recording_active; }
-  void SetRecordingActive(const CPUThreadGuard& guard, bool active) { m_recording_active = active; }
+  void SetRecordingActive(bool active) { m_recording_active = active; }
   void Clear(const CPUThreadGuard& guard);
 
-  void Save(const CPUThreadGuard& guard, std::FILE* file) const;
+  void Save(std::FILE* file) const;
   void Load(const CPUThreadGuard& guard, std::FILE* file);
 
   void IsolateHasExecuted(const CPUThreadGuard& guard);

@@ -201,7 +201,7 @@ void Cache::Flush(Memory::MemoryManager& memory, u32 addr)
   }
 }
 
-void Cache::Touch(Memory::MemoryManager& memory, u32 addr, bool store)
+void Cache::Touch(Memory::MemoryManager& memory, u32 addr)
 {
   GetCache(memory, addr, false);
 }

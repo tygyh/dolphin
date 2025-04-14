@@ -20,7 +20,7 @@ public:
 
 private:
   void GenQuantizedLoadFloat(bool single, bool isInline);
-  void GenQuantizedStoreFloat(bool single, bool isInline);
+  void GenQuantizedStoreFloat(bool single);
 };
 
 class CommonAsmRoutines : public CommonAsmRoutinesBase, public QuantizedMemoryRoutines

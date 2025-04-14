@@ -32,7 +32,7 @@ private:
 
   IPCReply CancelInterrupt(const IOCtlRequest& request);
   std::optional<IPCReply> GetDeviceChange(const IOCtlRequest& request);
-  IPCReply Shutdown(const IOCtlRequest& request);
+  IPCReply Shutdown();
   s32 SubmitTransfer(USB::Device& device, const IOCtlRequest& request);
 
   void TriggerDeviceChangeReply();

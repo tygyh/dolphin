@@ -611,7 +611,7 @@ std::optional<IPCReply> ESDevice::IOCtlV(const IOCtlVRequest& request)
     return SetUID(context->uid, request);
   case IOCTL_ES_DIVERIFY:
   case IOCTL_ES_DIVERIFY_WITH_VIEW:
-    return DIVerify(request);
+    return DIVerify();
 
   case IOCTL_ES_GETOWNEDTITLECNT:
     return GetOwnedTitleCount(request);
@@ -690,7 +690,7 @@ std::optional<IPCReply> ESDevice::IOCtlV(const IOCtlVRequest& request)
   case IOCTL_ES_EXPORTCONTENTEND:
     return ExportContentEnd(*context, request);
   case IOCTL_ES_EXPORTTITLEDONE:
-    return ExportTitleDone(*context, request);
+    return ExportTitleDone(*context);
   case IOCTL_ES_CHECKKOREAREGION:
     return CheckKoreaRegion(request);
   case IOCTL_ES_GETDEVICECERT:
@@ -793,7 +793,7 @@ std::optional<IPCReply> ESDevice::LaunchBC(const IOCtlVRequest& request)
 // This is technically an ioctlv in IOS's ES, but it is an internal API which cannot be
 // used from the PowerPC (for unpatched and up-to-date IOSes anyway).
 // So we block access to it from the IPC interface.
-IPCReply ESDevice::DIVerify(const IOCtlVRequest& request)
+IPCReply ESDevice::DIVerify()
 {
   return IPCReply(ES_EINVAL);
 }

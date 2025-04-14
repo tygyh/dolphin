@@ -109,7 +109,7 @@ void SWGfx::ShowImage(const AbstractTexture* source_texture,
                       const MathUtil::Rectangle<int>& source_rc)
 {
   if (!IsHeadless())
-    m_window->ShowImage(source_texture, source_rc);
+    m_window->ShowImage(source_texture);
 }
 
 void SWGfx::ClearRegion(const MathUtil::Rectangle<int>& target_rc, bool colorEnable,

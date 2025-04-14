@@ -134,10 +134,10 @@ int AudioInterfaceManager::GetAIPeriod() const
 
 void AudioInterfaceManager::GlobalUpdate(Core::System& system, u64 userdata, s64 cycles_late)
 {
-  system.GetAudioInterface().Update(userdata, cycles_late);
+  system.GetAudioInterface().Update(cycles_late);
 }
 
-void AudioInterfaceManager::Update(u64 userdata, s64 cycles_late)
+void AudioInterfaceManager::Update(s64 cycles_late)
 {
   if (!IsPlaying())
     return;

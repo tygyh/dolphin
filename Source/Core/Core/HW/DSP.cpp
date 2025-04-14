@@ -93,10 +93,10 @@ void DSPManager::DoState(PointerWrap& p)
 
 void DSPManager::GlobalCompleteARAM(Core::System& system, u64 userdata, s64 cyclesLate)
 {
-  system.GetDSP().CompleteARAM(userdata, cyclesLate);
+  system.GetDSP().CompleteARAM();
 }
 
-void DSPManager::CompleteARAM(u64 userdata, s64 cyclesLate)
+void DSPManager::CompleteARAM()
 {
   m_dsp_control.DMAState = 0;
   GenerateDSPInterrupt(INT_ARAM, 0);
@@ -153,7 +153,7 @@ void DSPManager::Shutdown()
 {
   if (!m_aram.wii_mode)
   {
-    Common::FreeMemoryPages(m_aram.ptr, m_aram.size);
+    Common::FreeMemoryPages(m_aram.ptr);
     m_aram.ptr = nullptr;
   }
 

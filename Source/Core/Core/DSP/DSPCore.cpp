@@ -182,10 +182,10 @@ void SDSP::Shutdown()
 
 void SDSP::FreeMemoryPages()
 {
-  Common::FreeMemoryPages(irom, DSP_IROM_BYTE_SIZE);
-  Common::FreeMemoryPages(iram, DSP_IRAM_BYTE_SIZE);
-  Common::FreeMemoryPages(dram, DSP_DRAM_BYTE_SIZE);
-  Common::FreeMemoryPages(coef, DSP_COEF_BYTE_SIZE);
+  Common::FreeMemoryPages(irom);
+  Common::FreeMemoryPages(iram);
+  Common::FreeMemoryPages(dram);
+  Common::FreeMemoryPages(coef);
   irom = nullptr;
   iram = nullptr;
   dram = nullptr;

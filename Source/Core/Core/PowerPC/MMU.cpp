@@ -1186,7 +1186,7 @@ void MMU::FlushDCacheLine(u32 address)
     m_ppc_state.dCache.Flush(m_memory, address);
 }
 
-void MMU::TouchDCacheLine(u32 address, bool store)
+void MMU::TouchDCacheLine(u32 address)
 {
   address &= ~0x1F;
 
@@ -1207,7 +1207,7 @@ void MMU::TouchDCacheLine(u32 address, bool store)
   }
 
   if (m_ppc_state.m_enable_dcache)
-    m_ppc_state.dCache.Touch(m_memory, address, store);
+    m_ppc_state.dCache.Touch(m_memory, address);
 }
 
 u32 MMU::IsOptimizableMMIOAccess(u32 address, u32 access_size) const

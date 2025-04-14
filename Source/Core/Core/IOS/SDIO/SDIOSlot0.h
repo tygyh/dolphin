@@ -138,8 +138,7 @@ private:
 
   IPCReply SendCommand(const IOCtlVRequest& request);
 
-  s32 ExecuteCommand(const Request& request, u32 buffer_in, u32 buffer_in_size, u32 rw_buffer,
-                     u32 rw_buffer_size, u32 buffer_out, u32 buffer_out_size);
+  s32 ExecuteCommand(const Request& request, u32 buffer_in, u32 rw_buffer_size, u32 buffer_out);
   void OpenInternal();
 
   u32 GetOCRegister() const;

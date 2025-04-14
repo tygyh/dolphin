@@ -1078,7 +1078,7 @@ void BluetoothEmuDevice::ExecuteHCICommandMessage(const USB::V0CtrlMessage& ctrl
     break;
 
   case HCI_CMD_INQUIRY_CANCEL:
-    CommandInquiryCancel(input_address);
+    CommandInquiryCancel();
     break;
 
   case HCI_CMD_REMOTE_NAME_REQ:
@@ -1192,7 +1192,7 @@ void BluetoothEmuDevice::CommandInquiry(u32 input_address)
   SendEventInquiryResponse();
 }
 
-void BluetoothEmuDevice::CommandInquiryCancel(u32 input_address)
+void BluetoothEmuDevice::CommandInquiryCancel()
 {
   hci_inquiry_cancel_rp reply;
   reply.status = 0x00;
@@ -1248,7 +1248,7 @@ void BluetoothEmuDevice::CommandDisconnect(u32 input_address)
 
   WiimoteDevice* wiimote = AccessWiimote(disconnect.con_handle);
   if (wiimote)
-    wiimote->EventDisconnect(disconnect.reason);
+    wiimote->EventDisconnect();
 }
 
 void BluetoothEmuDevice::CommandAcceptCon(u32 input_address)

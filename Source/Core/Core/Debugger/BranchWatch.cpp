@@ -59,7 +59,7 @@ union USnapshotMetadata
   }
 };
 
-void BranchWatch::Save(const CPUThreadGuard& guard, std::FILE* file) const
+void BranchWatch::Save(std::FILE* file) const
 {
   if (!CanSave())
   {

@@ -223,8 +223,8 @@ private:
   static void HandleAchievementChallengeIndicatorShowEvent(const rc_client_event_t* client_event);
   static void HandleAchievementChallengeIndicatorHideEvent(const rc_client_event_t* client_event);
   static void HandleAchievementProgressIndicatorShowEvent(const rc_client_event_t* client_event);
-  static void HandleGameCompletedEvent(const rc_client_event_t* client_event, rc_client_t* client);
-  static void HandleResetEvent(const rc_client_event_t* client_event);
+  static void HandleGameCompletedEvent(rc_client_t* client);
+  static void HandleResetEvent();
   static void HandleServerErrorEvent(const rc_client_event_t* client_event);
 
   static void Request(const rc_api_request_t* request, rc_client_server_callback_t callback,

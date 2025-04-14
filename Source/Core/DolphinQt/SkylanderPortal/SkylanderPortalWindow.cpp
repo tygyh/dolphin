@@ -452,7 +452,7 @@ QVBoxLayout* SkylanderPortalWindow::CreateFinderLayout()
   return main_layout;
 }
 
-bool SkylanderPortalWindow::eventFilter(QObject* object, QEvent* event)
+bool SkylanderPortalWindow::eventFilter(QEvent* event)
 {
   if (event->type() == QEvent::KeyPress)
   {

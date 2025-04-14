@@ -37,7 +37,7 @@ void IRWidget::SetY(u16 y)
   update();
 }
 
-void IRWidget::paintEvent(QPaintEvent* event)
+void IRWidget::paintEvent()
 {
   QPainter painter(this);
 

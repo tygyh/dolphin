@@ -163,7 +163,7 @@ bool Host_UpdateDiscordPresenceRaw(const std::string& details, const std::string
 #endif
 }
 
-std::unique_ptr<GBAHostInterface> Host_CreateGBAHost(std::weak_ptr<HW::GBA::Core> core)
+std::unique_ptr<GBAHostInterface> Host_CreateGBAHost()
 {
   return nullptr;
 }

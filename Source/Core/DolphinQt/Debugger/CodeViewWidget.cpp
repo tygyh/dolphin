@@ -170,7 +170,7 @@ CodeViewWidget::CodeViewWidget()
 
 #if QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
   connect(QGuiApplication::styleHints(), &QStyleHints::colorSchemeChanged, this,
-          [this](Qt::ColorScheme colorScheme) { OnSelectionChanged(); });
+          [this](Qt::ColorScheme) { OnSelectionChanged(); });
 #endif
 
   connect(this, &CodeViewWidget::customContextMenuRequested, this, &CodeViewWidget::OnContextMenu);

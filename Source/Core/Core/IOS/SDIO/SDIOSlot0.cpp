@@ -169,9 +169,8 @@ std::optional<IPCReply> SDIOSlot0Device::IOCtlV(const IOCtlVRequest& request)
   return IPCReply(IPC_SUCCESS);
 }
 
-s32 SDIOSlot0Device::ExecuteCommand(const Request& request, u32 buffer_in, u32 buffer_in_size,
-                                    u32 rw_buffer, u32 rw_buffer_size, u32 buffer_out,
-                                    u32 buffer_out_size)
+s32 SDIOSlot0Device::ExecuteCommand(const Request& request, u32 buffer_in, u32 rw_buffer_size,
+                                    u32 buffer_out)
 {
   // The game will send us a SendCMD with this information. To be able to read and write
   // to a file we need to prepare a 0x10 byte output buffer as response.
@@ -449,8 +448,7 @@ std::optional<IPCReply> SDIOSlot0Device::SendCommand(const IOCtlRequest& request
   INFO_LOG_FMT(IOS_SD, "IOCTL_SENDCMD {:x} IPC:{:08x}", memory.Read_U32(request.buffer_in),
                request.address);
 
-  const s32 return_value = ExecuteCommand(request, request.buffer_in, request.buffer_in_size, 0, 0,
-                                          request.buffer_out, request.buffer_out_size);
+  const s32 return_value = ExecuteCommand(request, request.buffer_in, 0, request.buffer_out);
 
   if (return_value == RET_EVENT_REGISTER)
   {
@@ -522,9 +520,8 @@ IPCReply SDIOSlot0Device::SendCommand(const IOCtlVRequest& request)
   memory.Memset(request.io_vectors[0].address, 0, request.io_vectors[0].size);
 
   const s32 return_value =
-      ExecuteCommand(request, request.in_vectors[0].address, request.in_vectors[0].size,
-                     request.in_vectors[1].address, request.in_vectors[1].size,
-                     request.io_vectors[0].address, request.io_vectors[0].size);
+      ExecuteCommand(request, request.in_vectors[0].address, request.in_vectors[1].size,
+                     request.io_vectors[0].address);
 
   return IPCReply(return_value);
 }

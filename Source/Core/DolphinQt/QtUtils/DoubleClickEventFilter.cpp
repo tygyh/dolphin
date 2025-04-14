@@ -5,7 +5,7 @@
 
 #include <QEvent>
 
-bool DoubleClickEventFilter::eventFilter(QObject* object, QEvent* event)
+bool DoubleClickEventFilter::eventFilter(QEvent* event)
 {
   if (event->type() == QEvent::MouseButtonDblClick)
     emit doubleClicked();

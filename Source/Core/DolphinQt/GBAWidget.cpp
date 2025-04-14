@@ -525,7 +525,7 @@ void GBAWidget::mouseMoveEvent(QMouseEvent* event)
   move(event_pos - m_move_pos - (geometry().topLeft() - pos()));
 }
 
-void GBAWidget::paintEvent(QPaintEvent* event)
+void GBAWidget::paintEvent()
 {
   QPainter painter(this);
   painter.fillRect(QRect(QPoint(), size()), Qt::black);

@@ -250,7 +250,7 @@ MainWindow::MainWindow(Core::System& system, std::unique_ptr<BootParameters> boo
 
 #if QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
   connect(QGuiApplication::styleHints(), &QStyleHints::colorSchemeChanged, this,
-          [this](Qt::ColorScheme colorScheme) {
+          [this](Qt::ColorScheme) {
             Settings::Instance().ApplyStyle();
             if (m_skylander_window)
               m_skylander_window->RefreshList();
@@ -1685,7 +1685,7 @@ void MainWindow::UpdateScreenSaverInhibition()
   UICommon::InhibitScreenSaver(inhibit);
 }
 
-bool MainWindow::eventFilter(QObject* object, QEvent* event)
+bool MainWindow::eventFilter(QEvent* event)
 {
   if (event->type() == QEvent::Close)
   {

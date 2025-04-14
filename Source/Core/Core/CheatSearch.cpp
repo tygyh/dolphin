@@ -439,7 +439,7 @@ Cheats::SearchErrorCode Cheats::CheatSearchSession<T>::RunSearch(const Core::CPU
     {
       result = Cheats::NextSearch<T>(
           guard, m_search_results, m_address_space,
-          [&func](const T& new_value, const T& old_value) { return func(new_value); });
+          [&func](const T& new_value, const T&) { return func(new_value); });
     }
     else
     {
@@ -459,12 +459,12 @@ Cheats::SearchErrorCode Cheats::CheatSearchSession<T>::RunSearch(const Core::CPU
     if (m_first_search_done)
     {
       result = Cheats::NextSearch<T>(guard, m_search_results, m_address_space,
-                                     [](const T& v1, const T& v2) { return true; });
+                                     [](const T&, const T&) { return true; });
     }
     else
     {
       result = Cheats::NewSearch<T>(guard, m_memory_ranges, m_address_space, m_aligned,
-                                    [](const T& v) { return true; });
+                                    [](const T&) { return true; });
     }
   }
 

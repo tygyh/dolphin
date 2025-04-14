@@ -109,8 +109,7 @@ public:
   static std::unique_ptr<VKStagingTexture> Create(StagingTextureType type,
                                                   const TextureConfig& config);
 
-  static std::pair<VkImage, VmaAllocation> CreateLinearImage(StagingTextureType type,
-                                                             const TextureConfig& config);
+  static std::pair<VkImage, VmaAllocation> CreateLinearImage(const TextureConfig& config);
 
 private:
   void CopyFromTextureToLinearImage(const VKTexture* src_tex,

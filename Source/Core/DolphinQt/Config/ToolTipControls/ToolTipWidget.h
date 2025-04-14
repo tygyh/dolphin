@@ -22,17 +22,17 @@ public:
   void SetDescription(QString description) { m_description = std::move(description); }
 
 private:
-  void enterEvent(QEnterEvent* event) override
+  void enterEvent(QEnterEvent*) override
   {
     if (m_timer_id)
       return;
     m_timer_id = this->startTimer(TOOLTIP_DELAY);
   }
 
-  void leaveEvent(QEvent* event) override { KillAndHide(); }
-  void hideEvent(QHideEvent* event) override { KillAndHide(); }
+  void leaveEvent(QEvent*) override { KillAndHide(); }
+  void hideEvent(QHideEvent*) override { KillAndHide(); }
 
-  void timerEvent(QTimerEvent* event) override
+  void timerEvent(QTimerEvent*) override
   {
     this->killTimer(*m_timer_id);
     m_timer_id.reset();

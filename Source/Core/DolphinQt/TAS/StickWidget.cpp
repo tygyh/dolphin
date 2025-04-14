@@ -38,7 +38,7 @@ void StickWidget::SetY(u16 y)
   update();
 }
 
-void StickWidget::paintEvent(QPaintEvent* event)
+void StickWidget::paintEvent()
 {
   QPainter painter(this);
 

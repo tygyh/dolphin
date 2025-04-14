@@ -37,7 +37,7 @@ namespace HW::GBA
 namespace
 {
 mLogger s_stub_logger = {
-    [](mLogger*, int category, mLogLevel level, const char* format, va_list args) {}, nullptr};
+    [](mLogger*, int, mLogLevel, const char*, va_list) {}, nullptr};
 }  // namespace
 
 constexpr auto SAMPLES = 512;
@@ -431,7 +431,7 @@ void Core::SetAVStream()
 {
   m_stream = {};
   m_stream.core = this;
-  m_stream.videoDimensionsChanged = [](mAVStream* stream, unsigned width, unsigned height) {
+  m_stream.videoDimensionsChanged = [](mAVStream* stream, unsigned, unsigned) {
     auto core = static_cast<AVStream*>(stream)->core;
     core->SetVideoBuffer();
   };
@@ -451,7 +451,7 @@ void Core::SetupEvent()
 {
   m_event.context = this;
   m_event.name = "Dolphin Sync";
-  m_event.callback = [](mTiming* timing, void* context, u32 cycles_late) {
+  m_event.callback = [](mTiming*, void* context, u32) {
     Core* core = static_cast<Core*>(context);
     if (core->m_core->platform(core->m_core) == mPLATFORM_GBA)
       static_cast<::GBA*>(core->m_core->board)->earlyExit = true;

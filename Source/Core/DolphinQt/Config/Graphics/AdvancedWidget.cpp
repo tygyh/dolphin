@@ -42,7 +42,7 @@ AdvancedWidget::AdvancedWidget(GraphicsWindow* parent)
   OnEmulationStateChanged(!Core::IsUninitialized(Core::System::GetInstance()));
 }
 
-AdvancedWidget::AdvancedWidget(GameConfigWidget* parent, Config::Layer* layer) : m_game_layer(layer)
+AdvancedWidget::AdvancedWidget(GameConfigWidget*, Config::Layer* layer) : m_game_layer(layer)
 {
   CreateWidgets();
   ConnectWidgets();

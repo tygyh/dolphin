@@ -104,7 +104,7 @@ public:
 private:
   void GenerateDSPInterrupt(u64 DSPIntType, s64 cyclesLate);
   static void GlobalGenerateDSPInterrupt(Core::System& system, u64 DSPIntType, s64 cyclesLate);
-  void CompleteARAM(u64 userdata, s64 cyclesLate);
+  void CompleteARAM();
   static void GlobalCompleteARAM(Core::System& system, u64 userdata, s64 cyclesLate);
   void UpdateInterrupts();
   void Do_ARAM_DMA();

@@ -6,7 +6,7 @@
 #include <QEvent>
 #include <QObject>
 
-bool WindowActivationEventFilter::eventFilter(QObject* object, QEvent* event)
+bool WindowActivationEventFilter::eventFilter(QEvent* event)
 {
   if (event->type() == QEvent::WindowDeactivate)
     emit windowDeactivated();

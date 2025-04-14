@@ -415,7 +415,7 @@ void NetPlayClient::OnData(sf::Packet& packet)
     break;
 
   case MessageID::GolfPrepare:
-    OnGolfPrepare(packet);
+    OnGolfPrepare();
     break;
 
   case MessageID::ChangeGame:
@@ -797,7 +797,7 @@ void NetPlayClient::OnGolfSwitch(sf::Packet& packet)
   }
 }
 
-void NetPlayClient::OnGolfPrepare(sf::Packet& packet)
+void NetPlayClient::OnGolfPrepare()
 {
   m_wait_on_input_received = true;
   m_wait_on_input = true;

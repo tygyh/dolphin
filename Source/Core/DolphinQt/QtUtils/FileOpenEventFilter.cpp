@@ -10,7 +10,7 @@ FileOpenEventFilter::FileOpenEventFilter(QObject* event_source) : QObject(event_
   event_source->installEventFilter(this);
 }
 
-bool FileOpenEventFilter::eventFilter(QObject* object, QEvent* event)
+bool FileOpenEventFilter::eventFilter(QEvent* event)
 {
   if (event->type() == QEvent::FileOpen)
   {

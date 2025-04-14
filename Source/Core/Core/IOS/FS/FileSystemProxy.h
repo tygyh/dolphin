@@ -149,7 +149,7 @@ private:
 
   using Handle = FSCore::Handle;
 
-  IPCReply Format(const Handle& handle, const IOCtlRequest& request);
+  IPCReply Format(const Handle& handle);
   IPCReply GetStats(const Handle& handle, const IOCtlRequest& request);
   IPCReply CreateDirectory(const Handle& handle, const IOCtlRequest& request);
   IPCReply ReadDirectory(const Handle& handle, const IOCtlVRequest& request);

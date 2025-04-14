@@ -154,7 +154,7 @@ void JITWidget::UpdateProfilingButton()
   m_toggle_profiling_button->setChecked(enabled);
 }
 
-void JITWidget::UpdateOtherButtons(Core::State state)
+void JITWidget::UpdateOtherButtons()
 {
   const bool jit_exists = m_system.GetJitInterface().GetCore() != nullptr;
   m_clear_cache_button->setEnabled(jit_exists);
@@ -489,7 +489,7 @@ void JITWidget::OnDebugFontChanged(const QFont& font)
 
 void JITWidget::OnEmulationStateChanged(Core::State state)
 {
-  UpdateOtherButtons(state);
+  UpdateOtherButtons();
   UpdateContent(state);
 }
 

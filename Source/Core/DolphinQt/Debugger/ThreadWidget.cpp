@@ -97,7 +97,7 @@ void ThreadWidget::CreateWidgets()
 void ThreadWidget::ConnectWidgets()
 {
   connect(m_thread_table->selectionModel(), &QItemSelectionModel::selectionChanged,
-          [this](const QItemSelection& selected, const QItemSelection& deselected) {
+          [this](const QItemSelection& selected, const QItemSelection&) {
             const auto indexes = selected.indexes();
             const int row = indexes.empty() ? -1 : indexes.first().row();
             OnSelectionChanged(row);

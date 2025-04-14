@@ -764,7 +764,7 @@ std::unique_ptr<VKStagingTexture> VKStagingTexture::Create(StagingTextureType ty
   if (DriverDetails::HasBug(DriverDetails::BUG_SLOW_OPTIMAL_IMAGE_TO_BUFFER_COPY) &&
       type == StagingTextureType::Readback && config.samples == 1)
   {
-    std::tie(linear_image, linear_image_alloc) = CreateLinearImage(type, config);
+    std::tie(linear_image, linear_image_alloc) = CreateLinearImage(config);
   }
 
   std::unique_ptr<StagingBuffer> staging_buffer =
@@ -780,8 +780,7 @@ std::unique_ptr<VKStagingTexture> VKStagingTexture::Create(StagingTextureType ty
   return staging_tex;
 }
 
-std::pair<VkImage, VmaAllocation> VKStagingTexture::CreateLinearImage(StagingTextureType type,
-                                                                      const TextureConfig& config)
+std::pair<VkImage, VmaAllocation> VKStagingTexture::CreateLinearImage(const TextureConfig& config)
 {
   // Create a intermediate texture with linear tiling
   VkImageCreateInfo image_info = {VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO,

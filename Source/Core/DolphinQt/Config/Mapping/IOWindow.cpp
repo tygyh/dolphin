@@ -247,7 +247,7 @@ class InputStateLineEdit : public QLineEdit
 public:
   explicit InputStateLineEdit(std::function<ControlState()> state_evaluator);
   void SetShouldPaintStateIndicator(bool value);
-  void paintEvent(QPaintEvent* event) override;
+  void paintEvent() override;
 
 private:
   std::function<ControlState()> m_state_evaluator;
@@ -859,9 +859,9 @@ void InputStateLineEdit::SetShouldPaintStateIndicator(bool value)
   m_should_paint_state_indicator = value;
 }
 
-void InputStateLineEdit::paintEvent(QPaintEvent* event)
+void InputStateLineEdit::paintEvent()
 {
-  QLineEdit::paintEvent(event);
+  QLineEdit::paintEvent();
 
   if (!m_should_paint_state_indicator)
     return;

@@ -268,7 +268,7 @@ IPCReply NetWDCommandDevice::SetLinkState(const IOCtlVRequest& request)
   return IPCReply(IPC_SUCCESS);
 }
 
-IPCReply NetWDCommandDevice::GetLinkState(const IOCtlVRequest& request) const
+IPCReply NetWDCommandDevice::GetLinkState() const
 {
   INFO_LOG_FMT(IOS_NET, "WD_GetLinkState called (status={}, mode={})", m_status, m_mode);
   if (!WD::IsValidMode(m_mode))
@@ -334,7 +334,7 @@ std::optional<IPCReply> NetWDCommandDevice::IOCtlV(const IOCtlVRequest& request)
   case IOCTLV_WD_SET_LINKSTATE:
     return SetLinkState(request);
   case IOCTLV_WD_GET_LINKSTATE:
-    return GetLinkState(request);
+    return GetLinkState();
   case IOCTLV_WD_DISASSOC:
     return Disassociate(request);
 

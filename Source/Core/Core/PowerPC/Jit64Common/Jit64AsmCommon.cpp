@@ -422,7 +422,7 @@ void QuantizedMemoryRoutines::GenQuantizedStore(bool single, EQuantizeType type,
 
   if (type == QUANTIZE_FLOAT)
   {
-    GenQuantizedStoreFloat(single, isInline);
+    GenQuantizedStoreFloat(single);
   }
   else if (single)
   {
@@ -543,7 +543,7 @@ void QuantizedMemoryRoutines::GenQuantizedStore(bool single, EQuantizeType type,
   SafeWriteRegToReg(RSCRATCH, RSCRATCH_EXTRA, size, 0, QUANTIZED_REGS_TO_SAVE, flags);
 }
 
-void QuantizedMemoryRoutines::GenQuantizedStoreFloat(bool single, bool isInline)
+void QuantizedMemoryRoutines::GenQuantizedStoreFloat(bool single)
 {
   if (single)
   {

@@ -102,7 +102,7 @@ private:
   void SetAIDSampleRate(SampleRate sample_rate);
   void SetAISSampleRate(SampleRate sample_rate);
 
-  void Update(u64 userdata, s64 cycles_late);
+  void Update(s64 cycles_late);
   static void GlobalUpdate(Core::System& system, u64 userdata, s64 cycles_late);
 
   // Registers

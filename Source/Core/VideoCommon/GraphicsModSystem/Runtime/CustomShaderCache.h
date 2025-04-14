@@ -126,12 +126,11 @@ private:
                               std::unique_ptr<AbstractPipeline> pipeline);
 
   std::unique_ptr<AbstractShader>
-  CompilePixelShader(const PixelShaderUid& uid, const CustomShaderInstance& custom_shaders) const;
+  CompilePixelShader(const PixelShaderUid& uid) const;
   void NotifyPixelShaderFinished(PixelShaderIterator iterator,
                                  std::unique_ptr<AbstractShader> shader);
   std::unique_ptr<AbstractShader>
-  CompilePixelShader(const UberShader::PixelShaderUid& uid,
-                     const CustomShaderInstance& custom_shaders) const;
+  CompilePixelShader(const UberShader::PixelShaderUid& uid) const;
   void NotifyPixelShaderFinished(UberPixelShaderIterator iterator,
                                  std::unique_ptr<AbstractShader> shader);
 

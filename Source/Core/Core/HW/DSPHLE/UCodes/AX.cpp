@@ -27,7 +27,7 @@
 
 namespace DSP::HLE
 {
-AXUCode::AXUCode(DSPHLE* dsphle, u32 crc, bool dummy) : UCodeInterface(dsphle, crc)
+AXUCode::AXUCode(DSPHLE* dsphle, u32 crc, bool) : UCodeInterface(dsphle, crc)
 {
 }
 

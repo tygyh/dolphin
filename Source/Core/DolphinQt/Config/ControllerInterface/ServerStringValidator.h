@@ -11,5 +11,5 @@ class ServerStringValidator : public QValidator
 public:
   explicit ServerStringValidator(QObject* parent);
 
-  State validate(QString& input, int& pos) const override;
+  State validate(QString& input) const override;
 };

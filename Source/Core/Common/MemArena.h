@@ -74,9 +74,8 @@ public:
   /// Should not be called on a view that is still mapped into the virtual memory region.
   ///
   /// @param view Pointer returned by CreateView().
-  /// @param size Size passed to the corresponding CreateView() call.
   ///
-  void ReleaseView(void* view, size_t size);
+  void ReleaseView(void* view);
 
   ///
   /// Reserve the singular 'virtual' memory region handled by this MemArena. This is used to create

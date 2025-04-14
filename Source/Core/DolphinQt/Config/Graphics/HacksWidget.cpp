@@ -31,7 +31,7 @@ HacksWidget::HacksWidget(GraphicsWindow* parent)
           [parent] { emit parent->UseGPUTextureDecodingChanged(); });
 }
 
-HacksWidget::HacksWidget(GameConfigWidget* parent, Config::Layer* layer) : m_game_layer(layer)
+HacksWidget::HacksWidget(GameConfigWidget*, Config::Layer* layer) : m_game_layer(layer)
 {
   CreateWidgets();
   ConnectWidgets();

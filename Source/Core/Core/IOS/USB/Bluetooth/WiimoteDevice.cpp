@@ -268,7 +268,7 @@ bool WiimoteDevice::EventConnectionAccept()
   return true;
 }
 
-void WiimoteDevice::EventDisconnect(u8 reason)
+void WiimoteDevice::EventDisconnect()
 {
   // If someone wants to be fancy we could also figure out the values for reason
   // and display things like "Wii Remote %i disconnected due to inactivity!" etc.
@@ -765,8 +765,7 @@ constexpr u8 SDP_SEQ8 = 0x35;
 [[maybe_unused]] constexpr u8 SDP_SEQ16 = 0x36;
 
 void WiimoteDevice::SDPSendServiceSearchResponse(u16 cid, u16 transaction_id,
-                                                 u8* service_search_pattern,
-                                                 u16 maximum_service_record_count)
+                                                 u8* service_search_pattern)
 {
   // verify block... we handle search pattern for HID service only
   {
@@ -860,8 +859,6 @@ static int ParseAttribList(u8* attrib_id_list, u16& start_id, u16& end_id)
 }
 
 void WiimoteDevice::SDPSendServiceAttributeResponse(u16 cid, u16 transaction_id, u32 service_handle,
-                                                    u16 start_attr_id, u16 end_attr_id,
-                                                    u16 maximum_attribute_byte_count,
                                                     u8* continuation_state)
 {
   if (service_handle != 0x10000)
@@ -913,8 +910,7 @@ void WiimoteDevice::HandleSDP(u16 cid, u8* data, u32 size)
     u8* service_search_pattern = buffer.GetPointer(5);
     const u16 maximum_service_record_count = buffer.Read16(10);
 
-    SDPSendServiceSearchResponse(cid, transaction_id, service_search_pattern,
-                                 maximum_service_record_count);
+    SDPSendServiceSearchResponse(cid, transaction_id, service_search_pattern);
   }
   break;
 
@@ -937,8 +933,7 @@ void WiimoteDevice::HandleSDP(u16 cid, u8* data, u32 size)
     offset += ParseAttribList(buffer.GetPointer(offset), start_attr_id, end_attr_id);
     u8* continuation_state = buffer.GetPointer(offset);
 
-    SDPSendServiceAttributeResponse(cid, transaction_id, service_handle, start_attr_id, end_attr_id,
-                                    maximum_attribute_byte_count, continuation_state);
+    SDPSendServiceAttributeResponse(cid, transaction_id, service_handle, continuation_state);
   }
   break;
 

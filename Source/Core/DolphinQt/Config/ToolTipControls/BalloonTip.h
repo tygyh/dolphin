@@ -37,7 +37,7 @@ private:
                              int border_width);
 
 protected:
-  void paintEvent(QPaintEvent*) override;
+  void paintEvent() override;
 
 private:
   QColor m_border_color;

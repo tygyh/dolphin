@@ -475,7 +475,7 @@ void ConvertDialog::Convert()
     }
     else
     {
-      const auto callback = [&progress_dialog](const std::string& text, float percent) {
+      const auto callback = [&progress_dialog](const std::string&, float percent) {
         progress_dialog.SetValue(percent * 100);
         return !progress_dialog.WasCanceled();
       };

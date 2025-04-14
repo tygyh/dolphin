@@ -16,7 +16,7 @@ public:
   void ScheduleRemoval();
 
 private:
-  bool eventFilter(QObject* object, QEvent* event) override;
+  bool eventFilter(QEvent* event) override;
 };
 
 template <typename T>

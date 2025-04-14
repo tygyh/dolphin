@@ -27,7 +27,7 @@ struct ScopedJITPageWriteAndNoExecute
   ~ScopedJITPageWriteAndNoExecute() { JITPageWriteDisableExecuteEnable(); }
 };
 void* AllocateMemoryPages(size_t size);
-bool FreeMemoryPages(void* ptr, size_t size);
+bool FreeMemoryPages(void* ptr);
 void* AllocateAlignedMemory(size_t size, size_t alignment);
 void FreeAlignedMemory(void* ptr);
 bool ReadProtectMemory(void* ptr, size_t size);

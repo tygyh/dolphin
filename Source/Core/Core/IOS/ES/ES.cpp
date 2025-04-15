@@ -59,8 +59,8 @@ constexpr std::array<DirectoryToCreate, 9> s_directories_to_create = {{
     {"/wfs", 0, {FS::Mode::ReadWrite, FS::Mode::None, FS::Mode::None}, PID_UNKNOWN, PID_UNKNOWN},
 }};
 
-constexpr const char LAUNCH_FILE_PATH[] = "/sys/launch.sys";
-constexpr const char SPACE_FILE_PATH[] = "/sys/space.sys";
+constexpr char LAUNCH_FILE_PATH[] = "/sys/launch.sys";
+constexpr char SPACE_FILE_PATH[] = "/sys/space.sys";
 constexpr size_t SPACE_FILE_SIZE = sizeof(u64) + sizeof(ES::TicketView) + ES::MAX_TMD_SIZE;
 
 CoreTiming::EventType* s_finish_init_event;

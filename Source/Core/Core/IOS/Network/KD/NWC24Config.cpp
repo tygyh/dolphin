@@ -14,8 +14,8 @@
 
 namespace IOS::HLE::NWC24
 {
-constexpr const char CONFIG_PATH[] = "/" WII_WC24CONF_DIR "/nwc24msg.cfg";
-constexpr const char CBK_PATH[] = "/" WII_WC24CONF_DIR "/nwc24msg.cbk";
+constexpr char CONFIG_PATH[] = "/" WII_WC24CONF_DIR "/nwc24msg.cfg";
+constexpr char CBK_PATH[] = "/" WII_WC24CONF_DIR "/nwc24msg.cbk";
 
 NWC24Config::NWC24Config(std::shared_ptr<FS::FileSystem> fs) : m_fs{std::move(fs)}
 {

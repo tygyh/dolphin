@@ -14,7 +14,7 @@
 
 namespace IOS::HLE::NWC24
 {
-constexpr const char DL_LIST_PATH[] = "/" WII_WC24CONF_DIR "/nwc24dl.bin";
+constexpr char DL_LIST_PATH[] = "/" WII_WC24CONF_DIR "/nwc24dl.bin";
 
 NWC24Dl::NWC24Dl(std::shared_ptr<FS::FileSystem> fs) : m_fs{std::move(fs)}
 {

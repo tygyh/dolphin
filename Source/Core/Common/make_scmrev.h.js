@@ -31,7 +31,7 @@ function GetGitExe()
 	}
 
 	// last try - msysgit not in path (vs2015 default)
-	msyspath = "\\Git\\cmd\\git.exe";
+	let msyspath = "\\Git\\cmd\\git.exe";
 	gitexe = wshShell.ExpandEnvironmentStrings("%PROGRAMFILES(x86)%") + msyspath;
 	if (oFS.FileExists(gitexe)) {
 		return gitexe;

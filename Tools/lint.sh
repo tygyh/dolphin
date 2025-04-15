@@ -8,7 +8,7 @@ set -euo pipefail
 # inspired by https://markentier.tech/posts/2020/10/faster-git-under-wsl2/#solution
 GIT=git
 if [ "$(uname -s)" == "Linux" ]; then
-  if [ "$(stat --file-system --format=%T `pwd -P`)" == "v9fs" ]; then
+  if [ "$(stat --file-system --format=%T $(pwd -P))" == "v9fs" ]; then
     GIT=git.exe
   fi
 fi

@@ -73,7 +73,8 @@ public:
   void OnGolferChanged(bool is_golfer, const std::string& golfer_name) override;
   void OnTtlDetermined(u8 ttl) override;
 
-  void OnIndexAdded(bool success, const std::string error) override;
+  void OnIndexAddedSuccess() override;
+  void OnIndexAddedFail(const std::string error) override;
   void OnIndexRefreshFailed(const std::string error) override;
 
   bool IsRecording() override;

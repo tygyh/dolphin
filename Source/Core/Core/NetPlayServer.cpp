@@ -240,7 +240,12 @@ void NetPlayServer::SetupIndex()
 
   bool success = m_index.Add(session);
   if (m_dialog != nullptr)
-    m_dialog->OnIndexAdded(success, success ? "" : m_index.GetLastError());
+  {
+    if (success)
+      m_dialog->OnIndexAddedSuccess();
+    else
+      m_dialog->OnIndexAddedFail(m_index.GetLastError());
+  }
 
   m_index.SetErrorCallback([this] {
     if (m_dialog != nullptr)

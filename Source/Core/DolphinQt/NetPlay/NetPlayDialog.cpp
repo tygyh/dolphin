@@ -453,12 +453,14 @@ void NetPlayDialog::OnChat()
   });
 }
 
-void NetPlayDialog::OnIndexAdded(bool success, const std::string error)
+void NetPlayDialog::OnIndexAddedSuccess()
 {
-  DisplayMessage(success ? tr("Successfully added to the NetPlay index") :
-                           tr("Failed to add this session to the NetPlay index: %1")
-                               .arg(QString::fromStdString(error)),
-                 success ? "green" : "red");
+  DisplayMessage(tr("Successfully added to the NetPlay index"), "green");
+}
+
+void NetPlayDialog::OnIndexAddedFail(const std::string error)
+{
+  DisplayMessage(tr("Failed to add this session to the NetPlay index: %1").arg(QString::fromStdString(error)), "red");
 }
 
 void NetPlayDialog::OnIndexRefreshFailed(const std::string error)

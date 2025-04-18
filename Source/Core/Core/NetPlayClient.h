@@ -85,7 +85,8 @@ public:
   virtual void SetGameDigestResult(int pid, const std::string& result) = 0;
   virtual void AbortGameDigest() = 0;
 
-  virtual void OnIndexAdded(bool success, std::string error) = 0;
+  virtual void OnIndexAddedSuccess() = 0;
+  virtual void OnIndexAddedFail(std::string error) = 0;
   virtual void OnIndexRefreshFailed(std::string error) = 0;
 
   virtual void ShowChunkedProgressDialog(const std::string& title, u64 data_size,

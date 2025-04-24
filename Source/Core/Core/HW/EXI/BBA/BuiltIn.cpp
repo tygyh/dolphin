@@ -399,7 +399,7 @@ void CEXIETHERNET::BuiltInBBAInterface::HandleTCPFrame(const Common::TCPPacket& 
     ref->ready = false;
     ref->ip = std::bit_cast<u32>(ip_header.destination_addr);
 
-    sf::IpAddress target = sf::IpAddress(ntohl(destination_ip));
+    const sf::IpAddress target = sf::IpAddress(ntohl(destination_ip));
     ref->tcp_socket.Connect(target, ntohs(tcp_header.destination_port), m_current_ip);
   }
   else
@@ -594,7 +594,7 @@ void CEXIETHERNET::BuiltInBBAInterface::HandleUPnPClient()
 
 const Common::MACAddress& CEXIETHERNET::BuiltInBBAInterface::ResolveAddress(u32 inet_ip)
 {
-  auto it = m_arp_table.lower_bound(inet_ip);
+  const auto it = m_arp_table.lower_bound(inet_ip);
   if (it != m_arp_table.end() && it->first == inet_ip)
   {
     return it->second;
@@ -842,7 +842,7 @@ BbaTcpSocket::ConnectingState BbaTcpSocket::Connected(StackRef* ref)
     fd_set read_fds;
     fd_set write_fds;
     fd_set except_fds;
-    timeval t = {0, 0};
+    const timeval t = {0, 0};
     FD_ZERO(&read_fds);
     FD_ZERO(&write_fds);
     FD_ZERO(&except_fds);

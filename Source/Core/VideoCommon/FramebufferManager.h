@@ -181,7 +181,8 @@ protected:
   bool IsUsingTiledEFBCache() const;
   bool IsEFBCacheTilePresent(bool depth, u32 x, u32 y, u32* tile_index) const;
   MathUtil::Rectangle<int> GetEFBCacheTileRect(u32 tile_index) const;
-  void PopulateEFBCache(bool depth, u32 tile_index, bool async = false);
+  void PopulateEFBCacheAsync(bool depth, u32 tile_index);
+  void PopulateEFBCache(bool depth, u32 tile_index);
 
   void CreatePokeVertices(std::vector<EFBPokeVertex>* destination_list, u32 x, u32 y, float z,
                           u32 color);

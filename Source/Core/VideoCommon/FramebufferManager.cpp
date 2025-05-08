@@ -483,7 +483,7 @@ u32 FramebufferManager::PeekEFBColor(u32 x, u32 y)
 
   u32 tile_index;
   if (!IsEFBCacheTilePresent(false, x, y, &tile_index))
-    PopulateEFBCache(false, tile_index);
+    PopulateEFBColorCache(tile_index);
 
   m_efb_color_cache.tiles[tile_index].frame_access_mask |= 1;
 
@@ -506,7 +506,7 @@ float FramebufferManager::PeekEFBDepth(u32 x, u32 y)
 
   u32 tile_index;
   if (!IsEFBCacheTilePresent(true, x, y, &tile_index))
-    PopulateEFBCache(true, tile_index);
+    PopulateEFBDepthCache(tile_index);
 
   m_efb_depth_cache.tiles[tile_index].frame_access_mask |= 1;
 
@@ -898,25 +898,23 @@ void FramebufferManager::PopulateEFBColorCacheAsync(u32 tile_index)
   data.tiles[tile_index].present = true;
 }
 
-void FramebufferManager::PopulateEFBCache(bool depth, u32 tile_index)
+void FramebufferManager::PopulateEFBDepthCache(u32 tile_index)
 {
   FlushEFBPokes();
   g_vertex_manager->OnCPUEFBAccess();
 
   // Force the path through the intermediate texture, as we can't do an image copy from a depth
   // buffer directly to a staging texture (must be the whole resource).
-  const bool force_intermediate_copy =
-      depth && (!g_backend_info.bSupportsDepthReadback ||
-                (!g_backend_info.bSupportsPartialDepthCopies && IsUsingTiledEFBCache()) ||
-                !AbstractTexture::IsCompatibleDepthAndColorFormats(m_efb_depth_texture->GetFormat(),
-                                                                   GetEFBDepthCopyFormat()));
+  const bool force_intermediate_copy = !g_backend_info.bSupportsDepthReadback ||
+      (!g_backend_info.bSupportsPartialDepthCopies && IsUsingTiledEFBCache()) ||
+      !AbstractTexture::IsCompatibleDepthAndColorFormats(m_efb_depth_texture->GetFormat(),
+                                                         GetEFBDepthCopyFormat());
 
   // Issue a copy from framebuffer -> copy texture if we have >1xIR or MSAA on.
-  EFBCacheData& data = depth ? m_efb_depth_cache : m_efb_color_cache;
+  EFBCacheData& data = m_efb_depth_cache;
   const MathUtil::Rectangle<int> rect = GetEFBCacheTileRect(tile_index);
   const MathUtil::Rectangle<int> native_rect = ConvertEFBRectangle(rect);
-  AbstractTexture* src_texture =
-      depth ? ResolveEFBDepthTexture(native_rect) : ResolveEFBColorTexture(native_rect);
+  AbstractTexture* src_texture = ResolveEFBDepthTexture(native_rect);
   if (GetEFBScale() != 1 || force_intermediate_copy)
   {
     // Downsample from internal resolution to 1x.
@@ -938,8 +936,62 @@ void FramebufferManager::PopulateEFBCache(bool depth, u32 tile_index)
     g_gfx->SetViewportAndScissor(MathUtil::Rectangle<int>(0, 0, rect.GetWidth(), rect.GetHeight()));
     g_gfx->SetPipeline(data.copy_pipeline.get());
     g_gfx->SetTexture(0, src_texture);
-    g_gfx->SetSamplerState(0, depth ? RenderState::GetPointSamplerState() :
-                                      RenderState::GetLinearSamplerState());
+    g_gfx->SetSamplerState(0, RenderState::GetPointSamplerState());
+    g_gfx->Draw(0, 3);
+
+    // Copy from EFB or copy texture to staging texture.
+    // No need to call FinishedRendering() here because CopyFromTexture() transitions.
+    data.readback_texture->CopyFromTexture(
+        data.texture.get(), MathUtil::Rectangle<int>(0, 0, rect.GetWidth(), rect.GetHeight()), 0, 0,
+        rect);
+
+    g_gfx->EndUtilityDrawing();
+  }
+  else
+  {
+    data.readback_texture->CopyFromTexture(src_texture, rect, 0, 0, rect);
+  }
+
+  // Wait until the copy is complete.
+  data.readback_texture->Flush();
+  data.needs_flush = false;
+  data.has_active_tiles = true;
+  data.out_of_date = false;
+  data.tiles[tile_index].present = true;
+}
+
+void FramebufferManager::PopulateEFBColorCache(u32 tile_index)
+{
+  FlushEFBPokes();
+  g_vertex_manager->OnCPUEFBAccess();
+
+  // Issue a copy from framebuffer -> copy texture if we have >1xIR or MSAA on.
+  EFBCacheData& data = m_efb_color_cache;
+  const MathUtil::Rectangle<int> rect = GetEFBCacheTileRect(tile_index);
+  const MathUtil::Rectangle<int> native_rect = ConvertEFBRectangle(rect);
+  AbstractTexture* src_texture = ResolveEFBColorTexture(native_rect);
+  if (GetEFBScale() != 1)
+  {
+    // Downsample from internal resolution to 1x.
+    // TODO: This won't produce correct results at IRs above 2x. More samples are required.
+    // This is the same issue as with EFB copies.
+    src_texture->FinishedRendering();
+    g_gfx->BeginUtilityDrawing();
+
+    const float rcp_src_width = 1.0f / m_efb_framebuffer->GetWidth();
+    const float rcp_src_height = 1.0f / m_efb_framebuffer->GetHeight();
+    const std::array<float, 4> uniforms = {
+        {native_rect.left * rcp_src_width, native_rect.top * rcp_src_height,
+         native_rect.GetWidth() * rcp_src_width, native_rect.GetHeight() * rcp_src_height}};
+    g_vertex_manager->UploadUtilityUniforms(&uniforms, sizeof(uniforms));
+
+    // Viewport will not be TILE_SIZExTILE_SIZE for the last row of tiles, assuming a tile size of
+    // 64, because 528 is not evenly divisible by 64.
+    g_gfx->SetAndDiscardFramebuffer(data.framebuffer.get());
+    g_gfx->SetViewportAndScissor(MathUtil::Rectangle<int>(0, 0, rect.GetWidth(), rect.GetHeight()));
+    g_gfx->SetPipeline(data.copy_pipeline.get());
+    g_gfx->SetTexture(0, src_texture);
+    g_gfx->SetSamplerState(0, RenderState::GetLinearSamplerState());
     g_gfx->Draw(0, 3);
 
     // Copy from EFB or copy texture to staging texture.

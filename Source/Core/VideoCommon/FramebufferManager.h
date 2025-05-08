@@ -183,7 +183,8 @@ protected:
   MathUtil::Rectangle<int> GetEFBCacheTileRect(u32 tile_index) const;
   void PopulateEFBDepthCacheAsync(u32 tile_index);
   void PopulateEFBColorCacheAsync(u32 tile_index);
-  void PopulateEFBCache(bool depth, u32 tile_index);
+  void PopulateEFBDepthCache(u32 tile_index);
+  void PopulateEFBColorCache(u32 tile_index);
 
   void CreatePokeVertices(std::vector<EFBPokeVertex>* destination_list, u32 x, u32 y, float z,
                           u32 color);

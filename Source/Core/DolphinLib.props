@@ -8,6 +8,10 @@
   <ItemGroup>
     <ClInclude Include="AudioCommon\AudioCommon.h" />
     <ClInclude Include="AudioCommon\Enums.h" />
+    <ClInclude Include="AudioCommon\FreeSurroundDecoder.h" />
+    <ClInclude Include="AudioCommon\KissFFT.h" />
+    <ClInclude Include="AudioCommon\KissFFTR.h" />
+    <ClInclude Include="AudioCommon\_KissFFTGuts.h" />
     <ClInclude Include="AudioCommon\Mixer.h" />
     <ClInclude Include="AudioCommon\NullSoundStream.h" />
     <ClInclude Include="AudioCommon\OpenALStream.h" />
@@ -820,6 +824,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AudioCommon\AudioCommon.cpp" />
+    <ClCompile Include="AudioCommon\ChannelMaps.cpp" />
+    <ClCompile Include="AudioCommon\FreeSurroundDecoder.cpp" />
+    <ClCompile Include="AudioCommon\KissFFT.cpp" />
+    <ClCompile Include="AudioCommon\KissFFTR.cpp" />
     <ClCompile Include="AudioCommon\Mixer.cpp" />
     <ClCompile Include="AudioCommon\NullSoundStream.cpp" />
     <ClCompile Include="AudioCommon\OpenALStream.cpp" />

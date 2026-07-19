@@ -622,7 +622,7 @@ std::string GameFile::GetNetPlayName(const Core::TitleDatabase& title_database) 
   if (!GetGameID().empty())
     info.push_back(GetGameID());
   if (GetRevision() != 0)
-    info.push_back("Revision " + std::to_string(GetRevision()));
+    info.push_back(fmt::format("Revision {}", GetRevision()));
 
   const std::string name = GetName(title_database);
 
@@ -634,8 +634,7 @@ std::string GameFile::GetNetPlayName(const Core::TitleDatabase& title_database) 
       lower_name.find(fmt::format("disc {}", disc_number)) == std::string::npos &&
       lower_name.find(fmt::format("disc{}", disc_number)) == std::string::npos)
   {
-    std::string disc_text = "Disc ";
-    info.push_back(disc_text + std::to_string(disc_number));
+    info.push_back(fmt::format("Disc {}", disc_number));
   }
   if (info.empty())
     return name;

@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 
 #include <android/log.h>
+#include <fmt/format.h>
 
 #include "Common/TraversalClient.h"
 #include "Core/Boot/Boot.h"
@@ -34,7 +35,7 @@ std::string InetAddressToString(const Common::TraversalInetAddress& addr)
     }
   }
 
-  return ip + ":" + std::to_string(ntohs(addr.port));
+  return fmt::format("{}:{}", ip, ntohs(addr.port));
 }
 
 const char* FailureReasonToString(Common::TraversalClient::FailureReason reason)

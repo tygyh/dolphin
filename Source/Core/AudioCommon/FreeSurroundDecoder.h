@@ -3,6 +3,9 @@
 
 #ifndef FREESURROUND_DECODER_H
 #define FREESURROUND_DECODER_H
+
+#include "AudioCommon/KissFFTR.h"
+
 #include <complex>
 #include <map>
 #include <vector>
@@ -46,39 +49,6 @@ typedef enum channel_setup
   cs_7point1 = ci_front_left | ci_front_center | ci_front_right | ci_side_center_left |
                ci_side_center_right | ci_back_left | ci_back_right | ci_lfe
 } channel_setup;
-
-extern "C" {
-
-// we're using doubles here...
-#define kiss_fft_scalar double
-
-typedef struct
-{
-  kiss_fft_scalar r;
-  kiss_fft_scalar i;
-} kiss_fft_cpx;
-
-typedef struct kiss_fftr_state* kiss_fftr_cfg;
-
-kiss_fftr_cfg kiss_fftr_alloc(int nfft, int inverse_fft, void* mem, size_t* lenmem);
-/*
- nfft must be even
-
- If you don't care to allocate space, use mem = lenmem = NULL
-*/
-
-void kiss_fftr(kiss_fftr_cfg cfg, const kiss_fft_scalar* timedata, kiss_fft_cpx* freqdata);
-/*
- input timedata has nfft scalar points
- output freqdata has nfft/2+1 complex points
-*/
-
-void kiss_fftri(kiss_fftr_cfg cfg, const kiss_fft_cpx* freqdata, kiss_fft_scalar* timedata);
-/*
- input freqdata has  nfft/2+1 complex points
- output timedata has nfft scalar points
-*/
-}
 
 typedef std::vector<std::vector<float*>> alloc_lut;
 

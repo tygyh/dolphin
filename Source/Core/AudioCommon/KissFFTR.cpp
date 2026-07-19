@@ -36,8 +36,8 @@ ARISING IN ANY WAY OUT OF
 THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include "FreeSurround/KissFFTR.h"
-#include "FreeSurround/_KissFFTGuts.h"
+#include "AudioCommon/KissFFTR.h"
+#include "AudioCommon/_KissFFTGuts.h"
 
 struct kiss_fftr_state {
   kiss_fft_cfg substate;

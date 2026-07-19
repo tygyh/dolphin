@@ -3,6 +3,9 @@ add_library(audiocommon
   AudioCommon.h
   CubebStream.h
   Enums.h
+  ${CMAKE_SOURCE_DIR}/Externals/FreeSurround/source/ChannelMaps.cpp
+  ${CMAKE_SOURCE_DIR}/Externals/FreeSurround/source/KissFFT.cpp
+  ${CMAKE_SOURCE_DIR}/Externals/FreeSurround/source/KissFFTR.cpp
   FreeSurroundDecoder.cpp
   FreeSurroundDecoder.h
   Mixer.cpp
@@ -88,6 +91,8 @@ endif()
 target_link_libraries(audiocommon
 PUBLIC
   common)
+
+target_include_directories(audiocommon PRIVATE ${CMAKE_SOURCE_DIR}/Externals/FreeSurround/include)
 
 if(ENABLE_CUBEB)
   target_link_libraries(audiocommon PRIVATE cubeb::cubeb)

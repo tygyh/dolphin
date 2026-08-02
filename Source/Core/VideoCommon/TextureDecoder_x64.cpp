@@ -60,7 +60,7 @@ static inline u32 DecodePixel_RGB5A3(u16 val)
 
 static inline void DecodeBytes_C4_IA8(u32* dst, const u8* src, const u8* tlut_)
 {
-  const u16* tlut = (u16*)tlut_;
+  const auto tlut = reinterpret_cast<const u16*>(tlut_);
   for (int x = 0; x < 4; x++)
   {
     u8 val = src[x];
@@ -71,7 +71,7 @@ static inline void DecodeBytes_C4_IA8(u32* dst, const u8* src, const u8* tlut_)
 
 static inline void DecodeBytes_C4_RGB565(u32* dst, const u8* src, const u8* tlut_)
 {
-  const u16* tlut = (u16*)tlut_;
+  const auto tlut = reinterpret_cast<const u16*>(tlut_);
   for (int x = 0; x < 4; x++)
   {
     u8 val = src[x];
@@ -82,7 +82,7 @@ static inline void DecodeBytes_C4_RGB565(u32* dst, const u8* src, const u8* tlut
 
 static inline void DecodeBytes_C4_RGB5A3(u32* dst, const u8* src, const u8* tlut_)
 {
-  const u16* tlut = (u16*)tlut_;
+  const auto tlut = reinterpret_cast<const u16*>(tlut_);
   for (int x = 0; x < 4; x++)
   {
     u8 val = src[x];
@@ -93,7 +93,7 @@ static inline void DecodeBytes_C4_RGB5A3(u32* dst, const u8* src, const u8* tlut
 
 static inline void DecodeBytes_C8_IA8(u32* dst, const u8* src, const u8* tlut_)
 {
-  const u16* tlut = (u16*)tlut_;
+  const auto tlut = reinterpret_cast<const u16*>(tlut_);
   for (int x = 0; x < 8; x++)
   {
     *dst++ = DecodePixel_IA8(tlut[src[x]]);
@@ -102,7 +102,7 @@ static inline void DecodeBytes_C8_IA8(u32* dst, const u8* src, const u8* tlut_)
 
 static inline void DecodeBytes_C8_RGB565(u32* dst, const u8* src, const u8* tlut_)
 {
-  const u16* tlut = (u16*)tlut_;
+  const auto tlut = reinterpret_cast<const u16*>(tlut_);
   for (int x = 0; x < 8; x++)
   {
     u8 val = src[x];
@@ -112,7 +112,7 @@ static inline void DecodeBytes_C8_RGB565(u32* dst, const u8* src, const u8* tlut
 
 static inline void DecodeBytes_C8_RGB5A3(u32* dst, const u8* src, const u8* tlut_)
 {
-  const u16* tlut = (u16*)tlut_;
+  const auto tlut = reinterpret_cast<const u16*>(tlut_);
   for (int x = 0; x < 8; x++)
   {
     u8 val = src[x];
@@ -122,7 +122,7 @@ static inline void DecodeBytes_C8_RGB5A3(u32* dst, const u8* src, const u8* tlut
 
 static inline void DecodeBytes_C14X2_IA8(u32* dst, const u16* src, const u8* tlut_)
 {
-  const u16* tlut = (u16*)tlut_;
+  const auto tlut = reinterpret_cast<const u16*>(tlut_);
   for (int x = 0; x < 4; x++)
   {
     u16 val = Common::swap16(src[x]);
@@ -132,7 +132,7 @@ static inline void DecodeBytes_C14X2_IA8(u32* dst, const u16* src, const u8* tlu
 
 static inline void DecodeBytes_C14X2_RGB565(u32* dst, const u16* src, const u8* tlut_)
 {
-  const u16* tlut = (u16*)tlut_;
+  const auto tlut = reinterpret_cast<const u16*>(tlut_);
   for (int x = 0; x < 4; x++)
   {
     u16 val = Common::swap16(src[x]);
@@ -142,7 +142,7 @@ static inline void DecodeBytes_C14X2_RGB565(u32* dst, const u16* src, const u8* 
 
 static inline void DecodeBytes_C14X2_RGB5A3(u32* dst, const u16* src, const u8* tlut_)
 {
-  const u16* tlut = (u16*)tlut_;
+  const auto tlut = reinterpret_cast<const u16*>(tlut_);
   for (int x = 0; x < 4; x++)
   {
     u16 val = Common::swap16(src[x]);
@@ -270,7 +270,7 @@ static void TexDecoder_DecodeImpl_I4_SSSE3(u32* dst, const u8* src, int width, i
     {
       for (int iy = 0, xStep = 4 * yStep; iy < 8; iy += 2, xStep++)
       {
-        const __m128i r0 = _mm_loadl_epi64((const __m128i*)(src + 8 * xStep));
+        const __m128i r0 = _mm_loadl_epi64(reinterpret_cast<const __m128i*>(src + 8 * xStep));
         // We want the hi 4 bits of each 8-bit word replicated to 32-bit words:
         // (00000000 00000000 HhGgFfEe DdCcBbAa) -> (00000000 00000000 HHGGFFEE DDCCBBAA)
         const __m128i i1 = _mm_and_si128(r0, kMask_xf0);
@@ -289,11 +289,11 @@ static void TexDecoder_DecodeImpl_I4_SSSE3(u32* dst, const u8* src, int width, i
         const __m128i o4 = _mm_shuffle_epi8(base, maskF7E6);
 
         // Write row 0:
-        _mm_storeu_si128((__m128i*)(dst + (y + iy) * width + x), o1);
-        _mm_storeu_si128((__m128i*)(dst + (y + iy) * width + x + 4), o2);
+        _mm_storeu_si128(reinterpret_cast<__m128i*>(dst + (y + iy) * width + x), o1);
+        _mm_storeu_si128(reinterpret_cast<__m128i*>(dst + (y + iy) * width + x + 4), o2);
         // Write row 1:
-        _mm_storeu_si128((__m128i*)(dst + (y + iy + 1) * width + x), o3);
-        _mm_storeu_si128((__m128i*)(dst + (y + iy + 1) * width + x + 4), o4);
+        _mm_storeu_si128(reinterpret_cast<__m128i*>(dst + (y + iy + 1) * width + x), o3);
+        _mm_storeu_si128(reinterpret_cast<__m128i*>(dst + (y + iy + 1) * width + x + 4), o4);
       }
     }
   }
@@ -314,7 +314,7 @@ static void TexDecoder_DecodeImpl_I4(u32* dst, const u8* src, int width, int hei
     {
       for (int iy = 0, xStep = 4 * yStep; iy < 8; iy += 2, xStep++)
       {
-        const __m128i r0 = _mm_loadl_epi64((const __m128i*)(src + 8 * xStep));
+        const __m128i r0 = _mm_loadl_epi64(reinterpret_cast<const __m128i*>(src + 8 * xStep));
         // Shuffle low 64-bits with itself to expand from (0000 0000 hgfe dcba) to (hhgg ffee
         // ddcc bbaa)
         const __m128i r1 = _mm_unpacklo_epi8(r0, r0);
@@ -380,11 +380,11 @@ static void TexDecoder_DecodeImpl_I4(u32* dst, const u8* src, int width, int hei
         const __m128i o4 = _mm_or_si128(_mm_and_si128(i162, kMask_x00000000ffffffff),
                                         _mm_and_si128(i262, kMask_xffffffff00000000));
         // Write row 0:
-        _mm_storeu_si128((__m128i*)(dst + (y + iy) * width + x), o1);
-        _mm_storeu_si128((__m128i*)(dst + (y + iy) * width + x + 4), o2);
+        _mm_storeu_si128(reinterpret_cast<__m128i*>(dst + (y + iy) * width + x), o1);
+        _mm_storeu_si128(reinterpret_cast<__m128i*>(dst + (y + iy) * width + x + 4), o2);
         // Write row 1:
-        _mm_storeu_si128((__m128i*)(dst + (y + iy + 1) * width + x), o3);
-        _mm_storeu_si128((__m128i*)(dst + (y + iy + 1) * width + x + 4), o4);
+        _mm_storeu_si128(reinterpret_cast<__m128i*>(dst + (y + iy + 1) * width + x), o3);
+        _mm_storeu_si128(reinterpret_cast<__m128i*>(dst + (y + iy + 1) * width + x + 4), o4);
       }
     }
   }
@@ -408,12 +408,12 @@ static void TexDecoder_DecodeImpl_I8_SSSE3(u32* dst, const u8* src, int width, i
         const __m128i mask7654 = _mm_set_epi8(7, 7, 7, 7, 6, 6, 6, 6, 5, 5, 5, 5, 4, 4, 4, 4);
         __m128i *quaddst, r, rgba0, rgba1;
         // Load 64 bits from `src` into an __m128i with upper 64 bits zeroed: (0000 0000 hgfe dcba)
-        r = _mm_loadl_epi64((const __m128i*)(src + 8 * xStep));
+        r = _mm_loadl_epi64(reinterpret_cast<const __m128i*>(src + 8 * xStep));
         // Shuffle select bytes to expand from (0000 0000 hgfe dcba) to:
         rgba0 = _mm_shuffle_epi8(r, mask3210);  // (dddd cccc bbbb aaaa)
         rgba1 = _mm_shuffle_epi8(r, mask7654);  // (hhhh gggg ffff eeee)
 
-        quaddst = (__m128i*)(dst + (y + iy) * width + x);
+        quaddst = reinterpret_cast<__m128i*>(dst + (y + iy) * width + x);
         _mm_storeu_si128(quaddst, rgba0);
         _mm_storeu_si128(quaddst + 1, rgba1);
       }
@@ -440,7 +440,7 @@ static void TexDecoder_DecodeImpl_I8(u32* dst, const u8* src, int width, int hei
       __m128i* quaddst;
 
       // Load 64 bits from `src` into an __m128i with upper 64 bits zeroed: (0000 0000 hgfe dcba)
-      const __m128i r0 = _mm_loadl_epi64((const __m128i*)src2);
+      const __m128i r0 = _mm_loadl_epi64(reinterpret_cast<const __m128i*>(src2));
       // Shuffle low 64-bits with itself to expand from (0000 0000 hgfe dcba) to (hhgg ffee ddcc
       // bbaa)
       const __m128i r1 = _mm_unpacklo_epi8(r0, r0);
@@ -453,14 +453,14 @@ static void TexDecoder_DecodeImpl_I8(u32* dst, const u8* src, int width, int hei
       const __m128i rgba1 = _mm_unpackhi_epi8(r1, r1);
 
       // Store (dddd cccc bbbb aaaa) out:
-      quaddst = (__m128i*)(dst + (y + 0) * width + x);
+      quaddst = reinterpret_cast<__m128i*>(dst + (y + 0) * width + x);
       _mm_storeu_si128(quaddst, rgba0);
       // Store (hhhh gggg ffff eeee) out:
       _mm_storeu_si128(quaddst + 1, rgba1);
 
       // Load 64 bits from `src` into an __m128i with upper 64 bits zeroed: (0000 0000 hgfe dcba)
       src2 += 8;
-      const __m128i r2 = _mm_loadl_epi64((const __m128i*)src2);
+      const __m128i r2 = _mm_loadl_epi64(reinterpret_cast<const __m128i*>(src2));
       // Shuffle low 64-bits with itself to expand from (0000 0000 hgfe dcba) to (hhgg ffee ddcc
       // bbaa)
       const __m128i r3 = _mm_unpacklo_epi8(r2, r2);
@@ -473,14 +473,14 @@ static void TexDecoder_DecodeImpl_I8(u32* dst, const u8* src, int width, int hei
       const __m128i rgba3 = _mm_unpackhi_epi8(r3, r3);
 
       // Store (dddd cccc bbbb aaaa) out:
-      quaddst = (__m128i*)(dst + (y + 1) * width + x);
+      quaddst = reinterpret_cast<__m128i*>(dst + (y + 1) * width + x);
       _mm_storeu_si128(quaddst, rgba2);
       // Store (hhhh gggg ffff eeee) out:
       _mm_storeu_si128(quaddst + 1, rgba3);
 
       // Load 64 bits from `src` into an __m128i with upper 64 bits zeroed: (0000 0000 hgfe dcba)
       src2 += 8;
-      const __m128i r4 = _mm_loadl_epi64((const __m128i*)src2);
+      const __m128i r4 = _mm_loadl_epi64(reinterpret_cast<const __m128i*>(src2));
       // Shuffle low 64-bits with itself to expand from (0000 0000 hgfe dcba) to (hhgg ffee ddcc
       // bbaa)
       const __m128i r5 = _mm_unpacklo_epi8(r4, r4);
@@ -493,14 +493,14 @@ static void TexDecoder_DecodeImpl_I8(u32* dst, const u8* src, int width, int hei
       const __m128i rgba5 = _mm_unpackhi_epi8(r5, r5);
 
       // Store (dddd cccc bbbb aaaa) out:
-      quaddst = (__m128i*)(dst + (y + 2) * width + x);
+      quaddst = reinterpret_cast<__m128i*>(dst + (y + 2) * width + x);
       _mm_storeu_si128(quaddst, rgba4);
       // Store (hhhh gggg ffff eeee) out:
       _mm_storeu_si128(quaddst + 1, rgba5);
 
       // Load 64 bits from `src` into an __m128i with upper 64 bits zeroed: (0000 0000 hgfe dcba)
       src2 += 8;
-      const __m128i r6 = _mm_loadl_epi64((const __m128i*)src2);
+      const __m128i r6 = _mm_loadl_epi64(reinterpret_cast<const __m128i*>(src2));
       // Shuffle low 64-bits with itself to expand from (0000 0000 hgfe dcba) to (hhgg ffee ddcc
       // bbaa)
       const __m128i r7 = _mm_unpacklo_epi8(r6, r6);
@@ -513,7 +513,7 @@ static void TexDecoder_DecodeImpl_I8(u32* dst, const u8* src, int width, int hei
       const __m128i rgba7 = _mm_unpackhi_epi8(r7, r7);
 
       // Store (dddd cccc bbbb aaaa) out:
-      quaddst = (__m128i*)(dst + (y + 3) * width + x);
+      quaddst = reinterpret_cast<__m128i*>(dst + (y + 3) * width + x);
       _mm_storeu_si128(quaddst, rgba6);
       // Store (hhhh gggg ffff eeee) out:
       _mm_storeu_si128(quaddst + 1, rgba7);
@@ -591,10 +591,10 @@ static void TexDecoder_DecodeImpl_IA8_SSSE3(u32* dst, const u8* src, int width, 
         const __m128i mask = _mm_set_epi8(6, 7, 7, 7, 4, 5, 5, 5, 2, 3, 3, 3, 0, 1, 1, 1);
         // Load 4x 16-bit IA8 samples from `src` into an __m128i with upper 64 bits zeroed:
         // (0000 0000 hgfe dcba)
-        const __m128i r0 = _mm_loadl_epi64((const __m128i*)(src + 8 * xStep));
+        const __m128i r0 = _mm_loadl_epi64(reinterpret_cast<const __m128i*>(src + 8 * xStep));
         // Shuffle to (ghhh efff cddd abbb)
         const __m128i r1 = _mm_shuffle_epi8(r0, mask);
-        _mm_storeu_si128((__m128i*)(dst + (y + iy) * width + x), r1);
+        _mm_storeu_si128(reinterpret_cast<__m128i*>(dst + (y + iy) * width + x), r1);
       }
     }
   }
@@ -620,7 +620,7 @@ static void TexDecoder_DecodeImpl_IA8(u32* dst, const u8* src, int width, int he
 
         // Load 4x 16-bit IA8 samples from `src` into an __m128i with upper 64 bits zeroed:
         // (0000 0000 hgfe dcba)
-        const __m128i r0 = _mm_loadl_epi64((const __m128i*)(src + 8 * xStep));
+        const __m128i r0 = _mm_loadl_epi64(reinterpret_cast<const __m128i*>(src + 8 * xStep));
 
         // Logical shift all 16-bit words right by 8 bits (0000 0000 hgfe dcba) to (0000 0000
         // 0h0f 0d0b). This gets us only the I components.
@@ -655,7 +655,7 @@ static void TexDecoder_DecodeImpl_IA8(u32* dst, const u8* src, int width, int he
         const __m128i r1 = _mm_or_si128(i3, a3);
 
         // write out the 128-bit result:
-        _mm_storeu_si128((__m128i*)(dst + (y + iy) * width + x), r1);
+        _mm_storeu_si128(reinterpret_cast<__m128i*>(dst + (y + iy) * width + x), r1);
       }
     }
   }
@@ -672,7 +672,8 @@ static void TexDecoder_DecodeImpl_C14X2(u32* dst, const u8* src, int width, int 
     for (int y = 0; y < height; y += 4)
       for (int x = 0, yStep = (y / 4) * Wsteps4; x < width; x += 4, yStep++)
         for (int iy = 0, xStep = 4 * yStep; iy < 4; iy++, xStep++)
-          DecodeBytes_C14X2_RGB5A3(dst + (y + iy) * width + x, (u16*)(src + 8 * xStep), tlut);
+          DecodeBytes_C14X2_RGB5A3(dst + (y + iy) * width + x,
+                                   reinterpret_cast<const u16*>(src + 8 * xStep), tlut);
   }
   break;
 
@@ -681,7 +682,8 @@ static void TexDecoder_DecodeImpl_C14X2(u32* dst, const u8* src, int width, int 
     for (int y = 0; y < height; y += 4)
       for (int x = 0, yStep = (y / 4) * Wsteps4; x < width; x += 4, yStep++)
         for (int iy = 0, xStep = 4 * yStep; iy < 4; iy++, xStep++)
-          DecodeBytes_C14X2_IA8(dst + (y + iy) * width + x, (u16*)(src + 8 * xStep), tlut);
+          DecodeBytes_C14X2_IA8(dst + (y + iy) * width + x,
+                                reinterpret_cast<const u16*>(src + 8 * xStep), tlut);
   }
   break;
 
@@ -690,7 +692,8 @@ static void TexDecoder_DecodeImpl_C14X2(u32* dst, const u8* src, int width, int 
     for (int y = 0; y < height; y += 4)
       for (int x = 0, yStep = (y / 4) * Wsteps4; x < width; x += 4, yStep++)
         for (int iy = 0, xStep = 4 * yStep; iy < 4; iy++, xStep++)
-          DecodeBytes_C14X2_RGB565(dst + (y + iy) * width + x, (u16*)(src + 8 * xStep), tlut);
+          DecodeBytes_C14X2_RGB565(dst + (y + iy) * width + x,
+                                   reinterpret_cast<const u16*>(src + 8 * xStep), tlut);
   }
   break;
 
@@ -716,7 +719,7 @@ static void TexDecoder_DecodeImpl_RGB565(u32* dst, const u8* src, int width, int
     {
       for (int iy = 0, xStep = 4 * yStep; iy < 4; iy++, xStep++)
       {
-        __m128i* dxtsrc = (__m128i*)(src + 8 * xStep);
+        auto* dxtsrc = reinterpret_cast<const __m128i*>(src + 8 * xStep);
         // Load 4x 16-bit colors: (0000 0000 hgfe dcba)
         // where hg, fe, ba, and dc are 16-bit colors in big-endian order
         const __m128i rgb565x4 = _mm_loadl_epi64(dxtsrc);
@@ -763,7 +766,7 @@ static void TexDecoder_DecodeImpl_RGB565(u32* dst, const u8* src, int width, int
             _mm_or_si128(_mm_or_si128(_mm_or_si128(r0, r1), _mm_or_si128(g0, g1)),
                          _mm_or_si128(_mm_or_si128(b0, b1), kAlpha));
 
-        __m128i* ptr = (__m128i*)(dst + (y + iy) * width + x);
+        __m128i* ptr = reinterpret_cast<__m128i*>(dst + (y + iy) * width + x);
         _mm_storeu_si128(ptr, abgr888x4);
       }
     }
@@ -793,8 +796,8 @@ static void TexDecoder_DecodeImpl_RGB5A3_SSSE3(u32* dst, const u8* src, int widt
         u32* newdst = dst + (y + iy) * width + x;
         const __m128i mask =
             _mm_set_epi8(-128, -128, 6, 7, -128, -128, 4, 5, -128, -128, 2, 3, -128, -128, 0, 1);
-        const __m128i valV =
-            _mm_shuffle_epi8(_mm_loadl_epi64((const __m128i*)(src + 8 * xStep)), mask);
+        const __m128i valV = _mm_shuffle_epi8(
+            _mm_loadl_epi64(reinterpret_cast<const __m128i*>(src + 8 * xStep)), mask);
         int cmp = _mm_movemask_epi8(valV);  // MSB: 0x2 = val0; 0x20=val1; 0x200 = val2; 0x2000=val3
         if ((cmp & 0x2222) ==
             0x2222)  // SSSE3 case #1: all 4 pixels are in RGB555 and alpha = 0xFF.
@@ -816,7 +819,7 @@ static void TexDecoder_DecodeImpl_RGB5A3_SSSE3(u32* dst, const u8* src, int widt
           // newdst[0] = r0 | (g0 << 8) | (b0 << 16) | (a0 << 24);
           const __m128i final = _mm_or_si128(_mm_or_si128(rV, _mm_slli_epi32(gV, 8)),
                                              _mm_or_si128(_mm_slli_epi32(bV, 16), aVxff00));
-          _mm_storeu_si128((__m128i*)newdst, final);
+          _mm_storeu_si128(reinterpret_cast<__m128i*>(newdst), final);
         }
         else if (!(cmp & 0x2222))  // SSSE3 case #2: all 4 pixels are in RGBA4443.
         {
@@ -843,12 +846,12 @@ static void TexDecoder_DecodeImpl_RGB5A3_SSSE3(u32* dst, const u8* src, int widt
           const __m128i final =
               _mm_or_si128(_mm_or_si128(rV, _mm_slli_epi32(gV, 8)),
                            _mm_or_si128(_mm_slli_epi32(bV, 16), _mm_slli_epi32(aV, 24)));
-          _mm_storeu_si128((__m128i*)newdst, final);
+          _mm_storeu_si128(reinterpret_cast<__m128i*>(newdst), final);
         }
         else
         {
           // TODO: Vectorise (Either 4-way branch or do both and select is better than this)
-          u32* vals = (u32*)&valV;
+          auto vals = reinterpret_cast<const u32*>(&valV);
           int r, g, b, a;
           for (int i = 0; i < 4; ++i)
           {
@@ -897,7 +900,7 @@ static void TexDecoder_DecodeImpl_RGB5A3(u32* dst, const u8* src, int width, int
       for (int iy = 0, xStep = 4 * yStep; iy < 4; iy++, xStep++)
       {
         u32* newdst = dst + (y + iy) * width + x;
-        const u16* newsrc = (const u16*)(src + 8 * xStep);
+        const u16* newsrc = reinterpret_cast<const u16*>(src + 8 * xStep);
 
         // TODO: weak point
         const u16 val0 = Common::swap16(newsrc[0]);
@@ -931,7 +934,7 @@ static void TexDecoder_DecodeImpl_RGB5A3(u32* dst, const u8* src, int width, int
                                              _mm_or_si128(_mm_slli_epi32(bV, 16), aVxff00));
 
           // write the final result:
-          _mm_storeu_si128((__m128i*)newdst, final);
+          _mm_storeu_si128(reinterpret_cast<__m128i*>(newdst), final);
         }
         else if (((val0 & 0x8000) | (val1 & 0x8000) | (val2 & 0x8000) | (val3 & 0x8000)) == 0x0000)
         {
@@ -963,12 +966,12 @@ static void TexDecoder_DecodeImpl_RGB5A3(u32* dst, const u8* src, int width, int
                            _mm_or_si128(_mm_slli_epi32(bV, 16), _mm_slli_epi32(aV, 24)));
 
           // write the final result:
-          _mm_storeu_si128((__m128i*)newdst, final);
+          _mm_storeu_si128(reinterpret_cast<__m128i*>(newdst), final);
         }
         else
         {
           // TODO: Vectorise (Either 4-way branch or do both and select is better than this)
-          u32* vals = (u32*)&valV;
+          const auto vals = reinterpret_cast<const u32*>(&valV);
           int r, g, b, a;
           for (int i = 0; i < 4; ++i)
           {
@@ -1010,23 +1013,23 @@ static void TexDecoder_DecodeImpl_RGBA8_SSSE3(u32* dst, const u8* src, int width
     {
       const u8* src2 = src + 64 * yStep;
       const __m128i mask0312 = _mm_set_epi8(12, 15, 13, 14, 8, 11, 9, 10, 4, 7, 5, 6, 0, 3, 1, 2);
-      const __m128i ar0 = _mm_loadu_si128((__m128i*)src2);
-      const __m128i ar1 = _mm_loadu_si128((__m128i*)src2 + 1);
-      const __m128i gb0 = _mm_loadu_si128((__m128i*)src2 + 2);
-      const __m128i gb1 = _mm_loadu_si128((__m128i*)src2 + 3);
+      const __m128i ar0 = _mm_loadu_si128(reinterpret_cast<const __m128i*>(src2));
+      const __m128i ar1 = _mm_loadu_si128(reinterpret_cast<const __m128i*>(src2 + 1));
+      const __m128i gb0 = _mm_loadu_si128(reinterpret_cast<const __m128i*>(src2 + 2));
+      const __m128i gb1 = _mm_loadu_si128(reinterpret_cast<const __m128i*>(src2 + 3));
 
       const __m128i rgba00 = _mm_shuffle_epi8(_mm_unpacklo_epi8(ar0, gb0), mask0312);
       const __m128i rgba01 = _mm_shuffle_epi8(_mm_unpackhi_epi8(ar0, gb0), mask0312);
       const __m128i rgba10 = _mm_shuffle_epi8(_mm_unpacklo_epi8(ar1, gb1), mask0312);
       const __m128i rgba11 = _mm_shuffle_epi8(_mm_unpackhi_epi8(ar1, gb1), mask0312);
 
-      __m128i* dst128 = (__m128i*)(dst + (y + 0) * width + x);
+      __m128i* dst128 = reinterpret_cast<__m128i*>(dst + (y + 0) * width + x);
       _mm_storeu_si128(dst128, rgba00);
-      dst128 = (__m128i*)(dst + (y + 1) * width + x);
+      dst128 = reinterpret_cast<__m128i*>(dst + (y + 1) * width + x);
       _mm_storeu_si128(dst128, rgba01);
-      dst128 = (__m128i*)(dst + (y + 2) * width + x);
+      dst128 = reinterpret_cast<__m128i*>(dst + (y + 2) * width + x);
       _mm_storeu_si128(dst128, rgba10);
-      dst128 = (__m128i*)(dst + (y + 3) * width + x);
+      dst128 = reinterpret_cast<__m128i*>(dst + (y + 3) * width + x);
       _mm_storeu_si128(dst128, rgba11);
     }
   }
@@ -1065,16 +1068,16 @@ static void TexDecoder_DecodeImpl_RGBA8(u32* dst, const u8* src, int width, int 
       const u8* src2 = src + 64 * yStep;
       // Loads the 1st half of AR components ([A 7][R 7][A 6][R 6] [A 5][R 5][A 4][R 4] [A 3][R
       // 3][A 2][R 2] [A 1][R 1][A 0][R 0])
-      const __m128i ar0 = _mm_loadu_si128((__m128i*)src2);
+      const __m128i ar0 = _mm_loadu_si128(reinterpret_cast<const __m128i*>(src2));
       // Loads the 2nd half of AR components ([A f][R f][A e][R e] [A d][R d][A c][R c] [A b][R
       // b][A a][R a] [A 9][R 9][A 8][R 8])
-      const __m128i ar1 = _mm_loadu_si128((__m128i*)src2 + 1);
+      const __m128i ar1 = _mm_loadu_si128(reinterpret_cast<const __m128i*>(src2 + 1));
       // Loads the 1st half of GB components ([G 7][B 7][G 6][B 6] [G 5][B 5][G 4][B 4] [G 3][B
       // 3][G 2][B 2] [G 1][B 1][G 0][B 0])
-      const __m128i gb0 = _mm_loadu_si128((__m128i*)src2 + 2);
+      const __m128i gb0 = _mm_loadu_si128(reinterpret_cast<const __m128i*>(src2 + 2));
       // Loads the 2nd half of GB components ([G f][B f][G e][B e] [G d][B d][G c][B c] [G b][B
       // b][G a][B a] [G 9][B 9][G 8][B 8])
-      const __m128i gb1 = _mm_loadu_si128((__m128i*)src2 + 3);
+      const __m128i gb1 = _mm_loadu_si128(reinterpret_cast<const __m128i*>(src2 + 3));
       __m128i rgba00, rgba01, rgba10, rgba11;
       const __m128i kMask_x000f = _mm_set_epi32(0x000000FFL, 0x000000FFL, 0x000000FFL, 0x000000FFL);
       const __m128i kMask_xf000 = _mm_set_epi32(0xFF000000L, 0xFF000000L, 0xFF000000L, 0xFF000000L);
@@ -1141,13 +1144,13 @@ static void TexDecoder_DecodeImpl_RGBA8(u32* dst, const u8* src, int width, int 
       rgba10 = _mm_or_si128(r__a10, _gb_10);
       rgba11 = _mm_or_si128(r__a11, _gb_11);
       // Write em out!
-      __m128i* dst128 = (__m128i*)(dst + (y + 0) * width + x);
+      __m128i* dst128 = reinterpret_cast<__m128i*>(dst + (y + 0) * width + x);
       _mm_storeu_si128(dst128, rgba00);
-      dst128 = (__m128i*)(dst + (y + 1) * width + x);
+      dst128 = reinterpret_cast<__m128i*>(dst + (y + 1) * width + x);
       _mm_storeu_si128(dst128, rgba01);
-      dst128 = (__m128i*)(dst + (y + 2) * width + x);
+      dst128 = reinterpret_cast<__m128i*>(dst + (y + 2) * width + x);
       _mm_storeu_si128(dst128, rgba10);
-      dst128 = (__m128i*)(dst + (y + 3) * width + x);
+      dst128 = reinterpret_cast<__m128i*>(dst + (y + 3) * width + x);
       _mm_storeu_si128(dst128, rgba11);
     }
   }
@@ -1183,11 +1186,12 @@ static void TexDecoder_DecodeImpl_CMPR(u32* dst, const u8* src, int width, int h
         const __m128i allFFs128 = _mm_cmpeq_epi32(_mm_setzero_si128(), _mm_setzero_si128());
 
         // Load 128 bits, i.e. two DXTBlocks (64-bits each)
-        const __m128i dxt = _mm_loadu_si128((__m128i*)(src + sizeof(struct DXTBlock) * 2 * xStep));
+        const __m128i dxt = _mm_loadu_si128(
+            reinterpret_cast<const __m128i*>(src + sizeof(struct DXTBlock) * 2 * xStep));
 
         // Copy the 2-bit indices from each DXT block:
         alignas(16) u32 dxttmp[4];
-        _mm_store_si128((__m128i*)dxttmp, dxt);
+        _mm_store_si128(reinterpret_cast<__m128i*>(dxttmp), dxt);
 
         u32 dxt0sel = dxttmp[1];
         u32 dxt1sel = dxttmp[3];
@@ -1349,8 +1353,8 @@ static void TexDecoder_DecodeImpl_CMPR(u32* dst, const u8* src, int width, int h
         // Copy the colors here:
         alignas(16) u32 colors0[4];
         alignas(16) u32 colors1[4];
-        _mm_store_si128((__m128i*)colors0, mmcolors0);
-        _mm_store_si128((__m128i*)colors1, mmcolors1);
+        _mm_store_si128(reinterpret_cast<__m128i*>(colors0), mmcolors0);
+        _mm_store_si128(reinterpret_cast<__m128i*>(colors1), mmcolors1);
 
         // Row 0:
         dst32[(width * 0) + 0] = colors0[(dxt0sel >> ((0 * 8) + 6)) & 3];

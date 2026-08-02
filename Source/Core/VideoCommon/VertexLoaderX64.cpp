@@ -29,7 +29,7 @@ static const X64Reg remaining_reg = R10;
 static const X64Reg skipped_reg = R11;
 static const X64Reg base_reg = RBX;
 
-static const u8* memory_base_ptr = (u8*)&g_main_cp_state.array_strides;
+static const u8* memory_base_ptr = reinterpret_cast<u8*>(&g_main_cp_state.array_strides);
 
 static OpArg MPIC(const void* ptr, X64Reg scale_reg, int scale = SCALE_1)
 {
@@ -607,6 +607,6 @@ void VertexLoaderX64::GenerateVertexLoader()
 int VertexLoaderX64::RunVertices(const u8* src, u8* dst, int count)
 {
   m_numLoadedVertices += count;
-  return ((int (*)(const u8* src, u8* dst, int count, const void* base))region)(src, dst, count,
-                                                                                memory_base_ptr);
+  return reinterpret_cast<int (*)(const u8* src, u8* dst, int count, const void* base)>(region)(
+      src, dst, count, memory_base_ptr);
 }

@@ -1256,7 +1256,7 @@ std::pair<std::string, std::string> GetBPRegInfo(u8 cmd, u32 cmddata)
   case BPMEM_TEV_COLOR_ENV + 30:
     return std::make_pair(
         fmt::format("BPMEM_TEV_COLOR_ENV Tev stage {}", (cmd - BPMEM_TEV_COLOR_ENV) / 2),
-        fmt::to_string(TevStageCombiner::ColorCombiner{.hex = cmddata}));
+        fmt::to_string(TevStageCombiner::ColorCombinerState{.hex = cmddata}));
 
   case BPMEM_TEV_ALPHA_ENV:  // 0xC1
   case BPMEM_TEV_ALPHA_ENV + 2:
@@ -1276,7 +1276,7 @@ std::pair<std::string, std::string> GetBPRegInfo(u8 cmd, u32 cmddata)
   case BPMEM_TEV_ALPHA_ENV + 30:
     return std::make_pair(
         fmt::format("BPMEM_TEV_ALPHA_ENV Tev stage {}", (cmd - BPMEM_TEV_ALPHA_ENV) / 2),
-        fmt::to_string(TevStageCombiner::AlphaCombiner{.hex = cmddata}));
+        fmt::to_string(TevStageCombiner::AlphaCombinerState{.hex = cmddata}));
 
   case BPMEM_TEV_COLOR_RA:      // 0xE0
   case BPMEM_TEV_COLOR_RA + 2:  // 0xE2

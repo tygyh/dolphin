@@ -37,6 +37,7 @@
 #include <type_traits>
 
 #include "Common/Inline.h"
+#include "CommonTypes.h"
 
 /*
  * Abstract bitfield class
@@ -117,6 +118,7 @@ template <std::size_t position, std::size_t bits, typename T,
           // StorageType is T for non-enum or the underlying-type for an enum.
           typename StorageType = std::conditional_t<std::is_enum_v<T>, std::underlying_type<T>,
                                                     std::type_identity<T>>::type>
+
 struct BitField
 {
 public:
@@ -151,6 +153,26 @@ public:
   static constexpr bool IsSigned() { return std::is_signed<T>(); }
   static constexpr std::size_t StartBit() { return position; }
   static constexpr std::size_t NumBits() { return bits; }
+
+  static constexpr T Extract(StorageType raw)
+  {
+    if constexpr (std::is_signed<T>())
+    {
+      const size_t shift_amount = 8 * sizeof(StorageType) - bits;
+      return static_cast<T>((raw << (shift_amount - position)) >> shift_amount);
+    }
+    else
+    {
+      return static_cast<T>((raw & GetMask()) >> position);
+    }
+  }
+
+  static constexpr StorageType Insert(StorageType raw, T val)
+  {
+    return (raw & ~GetMask()) | ((static_cast<StorageType>(val) << position) & GetMask());
+  }
+
+  static constexpr StorageType Mask() { return GetMask(); }
 
 private:
   // Unsigned version of StorageType

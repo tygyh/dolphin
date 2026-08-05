@@ -442,58 +442,274 @@ union IND_IMASK
 
 struct TevStageCombiner
 {
-  union ColorCombiner
-  {
-    // abc=8bit,d=10bit
-    BitField<0, 4, TevColorArg> d;
-    BitField<4, 4, TevColorArg> c;
-    BitField<8, 4, TevColorArg> b;
-    BitField<12, 4, TevColorArg> a;
+    // Color combiner state - no union, single storage member
+    struct ColorCombinerState
+    {
+        u32 hex = 0;  // Only storage member, never treated as "inactive"
 
-    BitField<16, 2, TevBias> bias;
-    BitField<18, 1, TevOp> op;                  // Applies when bias is not compare
-    BitField<18, 1, TevComparison> comparison;  // Applies when bias is compare
-    BitField<19, 1, bool, u32> clamp;
+        // Accessors using BitField static methods
+        constexpr auto d() const -> TevColorArg
+        {
+            return BitField<0, 4, TevColorArg>::Extract(hex);
+        }
+        constexpr auto d() -> TevColorArg&
+        {
+            // For mutable access, return a proxy or write setter below
+            // Simpler: use setter/getter pattern instead
+        }
+        void set_d(TevColorArg val)
+        {
+            hex = BitField<0, 4, TevColorArg>::Insert(hex, val);
+        }
 
-    BitField<20, 2, TevScale> scale;               // Applies when bias is not compare
-    BitField<20, 2, TevCompareMode> compare_mode;  // Applies when bias is compare
-    BitField<22, 2, TevOutput> dest;
+        constexpr auto c() const -> TevColorArg
+        {
+            return BitField<4, 4, TevColorArg>::Extract(hex);
+        }
+        void set_c(TevColorArg val)
+        {
+            hex = BitField<4, 4, TevColorArg>::Insert(hex, val);
+        }
 
-    u32 hex;
-  };
-  union AlphaCombiner
-  {
-    BitField<0, 2, u32> rswap;
-    BitField<2, 2, u32> tswap;
-    BitField<4, 3, TevAlphaArg> d;
-    BitField<7, 3, TevAlphaArg> c;
-    BitField<10, 3, TevAlphaArg> b;
-    BitField<13, 3, TevAlphaArg> a;
+        constexpr auto b() const -> TevColorArg
+        {
+            return BitField<8, 4, TevColorArg>::Extract(hex);
+        }
+        void set_b(TevColorArg val)
+        {
+            hex = BitField<8, 4, TevColorArg>::Insert(hex, val);
+        }
 
-    BitField<16, 2, TevBias> bias;
-    BitField<18, 1, TevOp> op;                  // Applies when bias is not compare
-    BitField<18, 1, TevComparison> comparison;  // Applies when bias is compare
-    BitField<19, 1, bool, u32> clamp;
+        constexpr auto a() const -> TevColorArg
+        {
+            return BitField<12, 4, TevColorArg>::Extract(hex);
+        }
+        void set_a(TevColorArg val)
+        {
+            hex = BitField<12, 4, TevColorArg>::Insert(hex, val);
+        }
 
-    BitField<20, 2, TevScale> scale;               // Applies when bias is not compare
-    BitField<20, 2, TevCompareMode> compare_mode;  // Applies when bias is compare
-    BitField<22, 2, TevOutput> dest;
+        constexpr auto bias() const -> TevBias
+        {
+            return BitField<16, 2, TevBias>::Extract(hex);
+        }
+        void set_bias(TevBias val)
+        {
+            hex = BitField<16, 2, TevBias>::Insert(hex, val);
+        }
 
-    u32 hex;
-  };
+        // For fields that overlap (op/comparison share bit 18):
+        constexpr auto op() const -> TevOp
+        {
+            return BitField<18, 1, TevOp>::Extract(hex);
+        }
+        void set_op(TevOp val)
+        {
+            hex = BitField<18, 1, TevOp>::Insert(hex, val);
+        }
 
-  ColorCombiner colorC;
-  AlphaCombiner alphaC;
+        constexpr auto comparison() const -> TevComparison
+        {
+            return BitField<18, 1, TevComparison>::Extract(hex);
+        }
+        void set_comparison(TevComparison val)
+        {
+            hex = BitField<18, 1, TevComparison>::Insert(hex, val);
+        }
+
+        constexpr auto clamp() const -> bool
+        {
+            return BitField<19, 1, bool, u32>::Extract(hex);
+        }
+        void set_clamp(bool val)
+        {
+            hex = BitField<19, 1, bool, u32>::Insert(hex, val);
+        }
+
+        constexpr auto scale() const -> TevScale
+        {
+            return BitField<20, 2, TevScale>::Extract(hex);
+        }
+        void set_scale(TevScale val)
+        {
+            hex = BitField<20, 2, TevScale>::Insert(hex, val);
+        }
+
+        constexpr auto compare_mode() const -> TevCompareMode
+        {
+            return BitField<20, 2, TevCompareMode>::Extract(hex);
+        }
+        void set_compare_mode(TevCompareMode val)
+        {
+            hex = BitField<20, 2, TevCompareMode>::Insert(hex, val);
+        }
+
+        constexpr auto dest() const -> TevOutput
+        {
+            return BitField<22, 2, TevOutput>::Extract(hex);
+        }
+        void set_dest(TevOutput val)
+        {
+            hex = BitField<22, 2, TevOutput>::Insert(hex, val);
+        }
+
+        // Optional: Raw access for serialization/debugging
+        constexpr auto raw() const -> u32 { return hex; }
+        void set_raw(u32 val) { hex = val; }
+    };
+
+    // Alpha combiner state - same pattern
+    struct AlphaCombinerState
+    {
+        u32 hex = 0;
+
+        constexpr auto rswap() const -> u32
+        {
+            return BitField<0, 2, u32>::Extract(hex);
+        }
+        void set_rswap(u32 val)
+        {
+            hex = BitField<0, 2, u32>::Insert(hex, val);
+        }
+
+        constexpr auto tswap() const -> u32
+        {
+            return BitField<2, 2, u32>::Extract(hex);
+        }
+        void set_tswap(u32 val)
+        {
+            hex = BitField<2, 2, u32>::Insert(hex, val);
+        }
+
+        constexpr auto d() const -> TevAlphaArg
+        {
+            return BitField<4, 3, TevAlphaArg>::Extract(hex);
+        }
+        void set_d(TevAlphaArg val)
+        {
+            hex = BitField<4, 3, TevAlphaArg>::Insert(hex, val);
+        }
+
+        constexpr auto c() const -> TevAlphaArg
+        {
+            return BitField<7, 3, TevAlphaArg>::Extract(hex);
+        }
+        void set_c(TevAlphaArg val)
+        {
+            hex = BitField<7, 3, TevAlphaArg>::Insert(hex, val);
+        }
+
+        constexpr auto b() const -> TevAlphaArg
+        {
+            return BitField<10, 3, TevAlphaArg>::Extract(hex);
+        }
+        void set_b(TevAlphaArg val)
+        {
+            hex = BitField<10, 3, TevAlphaArg>::Insert(hex, val);
+        }
+
+        constexpr auto a() const -> TevAlphaArg
+        {
+            return BitField<13, 3, TevAlphaArg>::Extract(hex);
+        }
+        void set_a(TevAlphaArg val)
+        {
+            hex = BitField<13, 3, TevAlphaArg>::Insert(hex, val);
+        }
+
+        constexpr auto bias() const -> TevBias
+        {
+            return BitField<16, 2, TevBias>::Extract(hex);
+        }
+        void set_bias(TevBias val)
+        {
+            hex = BitField<16, 2, TevBias>::Insert(hex, val);
+        }
+
+        constexpr auto op() const -> TevOp
+        {
+            return BitField<18, 1, TevOp>::Extract(hex);
+        }
+        void set_op(TevOp val)
+        {
+            hex = BitField<18, 1, TevOp>::Insert(hex, val);
+        }
+
+        constexpr auto comparison() const -> TevComparison
+        {
+            return BitField<18, 1, TevComparison>::Extract(hex);
+        }
+        void set_comparison(TevComparison val)
+        {
+            hex = BitField<18, 1, TevComparison>::Insert(hex, val);
+        }
+
+        constexpr auto clamp() const -> bool
+        {
+            return BitField<19, 1, bool, u32>::Extract(hex);
+        }
+        void set_clamp(bool val)
+        {
+            hex = BitField<19, 1, bool, u32>::Insert(hex, val);
+        }
+
+        constexpr auto scale() const -> TevScale
+        {
+            return BitField<20, 2, TevScale>::Extract(hex);
+        }
+        void set_scale(TevScale val)
+        {
+            hex = BitField<20, 2, TevScale>::Insert(hex, val);
+        }
+
+        constexpr auto compare_mode() const -> TevCompareMode
+        {
+            return BitField<20, 2, TevCompareMode>::Extract(hex);
+        }
+        void set_compare_mode(TevCompareMode val)
+        {
+            hex = BitField<20, 2, TevCompareMode>::Insert(hex, val);
+        }
+
+        constexpr auto dest() const -> TevOutput
+        {
+            return BitField<22, 2, TevOutput>::Extract(hex);
+        }
+        void set_dest(TevOutput val)
+        {
+            hex = BitField<22, 2, TevOutput>::Insert(hex, val);
+        }
+
+        constexpr auto raw() const -> u32 { return hex; }
+        void set_raw(u32 val) { hex = val; }
+    };
+
+    // Instance members (now just plain structs, no unions)
+    ColorCombinerState colorC;
+    AlphaCombinerState alphaC;
+
+    // Convenience: allow bulk load/store for serialization
+    void LoadFromRaw(u32 color, u32 alpha)
+    {
+        colorC.set_raw(color);
+        alphaC.set_raw(alpha);
+    }
+
+    void StoreToRaw(u32& color, u32& alpha) const
+    {
+        color = colorC.raw();
+        alpha = alphaC.raw();
+    }
 };
 template <>
-struct fmt::formatter<TevStageCombiner::ColorCombiner>
+struct fmt::formatter<TevStageCombiner::ColorCombinerState>
 {
   constexpr auto parse(format_parse_context& ctx) { return ctx.begin(); }
   template <typename FormatContext>
-  auto format(const TevStageCombiner::ColorCombiner& cc, FormatContext& ctx) const
+  auto format(const TevStageCombiner::ColorCombinerState& cc, FormatContext& ctx) const
   {
     auto out = ctx.out();
-    if (cc.bias != TevBias::Compare)
+    if (cc.bias() != TevBias::Compare)
     {
       // Generate an equation view, simplifying out addition of zero and multiplication by 1
       // dest = (d (OP) ((1 - c)*a + c*b) + bias) * scale
@@ -507,68 +723,68 @@ struct fmt::formatter<TevStageCombiner::ColorCombiner>
           "tex.rgb",  "tex.aaa",  "ras.rgb", "ras.aaa", "1",      ".5",     "konst.rgb", "0",
       };
 
-      const bool has_d = cc.d != TevColorArg::Zero;
+      const bool has_d = cc.d() != TevColorArg::Zero;
       // If c is one, (1 - c) is zero, so (1-c)*a is zero
-      const bool has_ac = cc.a != TevColorArg::Zero && cc.c != TevColorArg::One;
+      const bool has_ac = cc.a() != TevColorArg::Zero && cc.c() != TevColorArg::One;
       // If either b or c is zero, b*c is zero
-      const bool has_bc = cc.b != TevColorArg::Zero && cc.c != TevColorArg::Zero;
-      const bool has_bias = cc.bias != TevBias::Zero;  // != Compare is already known
-      const bool has_scale = cc.scale != TevScale::Scale1;
+      const bool has_bc = cc.b() != TevColorArg::Zero && cc.c() != TevColorArg::Zero;
+      const bool has_bias = cc.bias() != TevBias::Zero;  // != Compare is already known
+      const bool has_scale = cc.scale() != TevScale::Scale1;
 
-      const char op = (cc.op == TevOp::Sub ? '-' : '+');
+      const char op = (cc.op() == TevOp::Sub ? '-' : '+');
 
-      if (cc.dest == TevOutput::Prev)
+      if (cc.dest() == TevOutput::Prev)
         out = fmt::format_to(out, "dest.rgb = ");
       else
-        out = fmt::format_to(out, "{:n}.rgb = ", cc.dest);
+        out = fmt::format_to(out, "{:n}.rgb = ", cc.dest());
 
       if (has_scale)
         out = fmt::format_to(out, "(");
       if (has_d)
-        out = fmt::format_to(out, "{}", alt_names[cc.d]);
+        out = fmt::format_to(out, "{}", alt_names[cc.d()]);
       if (has_ac || has_bc)
       {
         if (has_d)
           out = fmt::format_to(out, " {} ", op);
-        else if (cc.op == TevOp::Sub)
+        else if (cc.op() == TevOp::Sub)
           out = fmt::format_to(out, "{}", op);
         if (has_ac && has_bc)
         {
-          if (cc.c == TevColorArg::Half)
+          if (cc.c() == TevColorArg::Half)
           {
             // has_a and has_b imply that c is not Zero or One, and Half is the only remaining
             // numeric constant.  This results in an average.
-            out = fmt::format_to(out, "({} + {})/2", alt_names[cc.a], alt_names[cc.b]);
+            out = fmt::format_to(out, "({} + {})/2", alt_names[cc.a()], alt_names[cc.b()]);
           }
           else
           {
-            out = fmt::format_to(out, "lerp({}, {}, {})", alt_names[cc.a], alt_names[cc.b],
-                                 alt_names[cc.c]);
+            out = fmt::format_to(out, "lerp({}, {}, {})", alt_names[cc.a()], alt_names[cc.b()],
+                                 alt_names[cc.c()]);
           }
         }
         else if (has_ac)
         {
-          if (cc.c == TevColorArg::Zero)
-            out = fmt::format_to(out, "{}", alt_names[cc.a]);
-          else if (cc.c == TevColorArg::Half)  // 1 - .5 is .5
-            out = fmt::format_to(out, ".5*{}", alt_names[cc.a]);
+          if (cc.c() == TevColorArg::Zero)
+            out = fmt::format_to(out, "{}", alt_names[cc.a()]);
+          else if (cc.c() == TevColorArg::Half)  // 1 - .5 is .5
+            out = fmt::format_to(out, ".5*{}", alt_names[cc.a()]);
           else
-            out = fmt::format_to(out, "(1 - {})*{}", alt_names[cc.c], alt_names[cc.a]);
+            out = fmt::format_to(out, "(1 - {})*{}", alt_names[cc.c()], alt_names[cc.a()]);
         }
         else  // has_bc
         {
-          if (cc.c == TevColorArg::One)
-            out = fmt::format_to(out, "{}", alt_names[cc.b]);
+          if (cc.c() == TevColorArg::One)
+            out = fmt::format_to(out, "{}", alt_names[cc.b()]);
           else
-            out = fmt::format_to(out, "{}*{}", alt_names[cc.c], alt_names[cc.b]);
+            out = fmt::format_to(out, "{}*{}", alt_names[cc.c()], alt_names[cc.b()]);
         }
       }
       if (has_bias)
       {
         if (has_ac || has_bc || has_d)
-          out = fmt::format_to(out, "{}", cc.bias == TevBias::AddHalf ? " + .5" : " - .5");
+          out = fmt::format_to(out, "{}", cc.bias() == TevBias::AddHalf ? " + .5" : " - .5");
         else
-          out = fmt::format_to(out, "{}", cc.bias == TevBias::AddHalf ? ".5" : "-.5");
+          out = fmt::format_to(out, "{}", cc.bias() == TevBias::AddHalf ? ".5" : "-.5");
       }
       else
       {
@@ -577,7 +793,7 @@ struct fmt::formatter<TevStageCombiner::ColorCombiner>
           out = fmt::format_to(out, "0");
       }
       if (has_scale)
-        out = fmt::format_to(out, ") * {:n}", cc.scale);
+        out = fmt::format_to(out, ") * {:n}", cc.scale());
       out = fmt::format_to(out, "\n\n");
     }
     return fmt::format_to(ctx.out(),
@@ -590,19 +806,19 @@ struct fmt::formatter<TevStageCombiner::ColorCombiner>
                           "Clamp: {}\n"
                           "Scale factor: {} / Compare mode: {}\n"
                           "Dest: {}",
-                          cc.a, cc.b, cc.c, cc.d, cc.bias, cc.op, cc.comparison,
-                          cc.clamp ? "Yes" : "No", cc.scale, cc.compare_mode, cc.dest);
+                          cc.a(), cc.b(), cc.c(), cc.d(), cc.bias(), cc.op(), cc.comparison(),
+                          cc.clamp() ? "Yes" : "No", cc.scale(), cc.compare_mode(), cc.dest());
   }
 };
 template <>
-struct fmt::formatter<TevStageCombiner::AlphaCombiner>
+struct fmt::formatter<TevStageCombiner::AlphaCombinerState>
 {
   constexpr auto parse(format_parse_context& ctx) { return ctx.begin(); }
   template <typename FormatContext>
-  auto format(const TevStageCombiner::AlphaCombiner& ac, FormatContext& ctx) const
+  auto format(const TevStageCombiner::AlphaCombinerState& ac, FormatContext& ctx) const
   {
     auto out = ctx.out();
-    if (ac.bias != TevBias::Compare)
+    if (ac.bias() != TevBias::Compare)
     {
       // Generate an equation view, simplifying out addition of zero and multiplication by 1
       // dest = (d (OP) ((1 - c)*a + c*b) + bias) * scale
@@ -616,53 +832,53 @@ struct fmt::formatter<TevStageCombiner::AlphaCombiner>
       // parameters, to make it explicit that these are operations on the alpha term instead of the
       // 4-element vector.  We also need to use the :n specifier so that the numeric ID isn't shown.
 
-      const bool has_d = ac.d != TevAlphaArg::Zero;
+      const bool has_d = ac.d() != TevAlphaArg::Zero;
       // There is no c value for alpha that results in (1 - c) always being zero
-      const bool has_ac = ac.a != TevAlphaArg::Zero;
+      const bool has_ac = ac.a() != TevAlphaArg::Zero;
       // If either b or c is zero, b*c is zero
-      const bool has_bc = ac.b != TevAlphaArg::Zero && ac.c != TevAlphaArg::Zero;
-      const bool has_bias = ac.bias != TevBias::Zero;  // != Compare is already known
-      const bool has_scale = ac.scale != TevScale::Scale1;
+      const bool has_bc = ac.b() != TevAlphaArg::Zero && ac.c() != TevAlphaArg::Zero;
+      const bool has_bias = ac.bias() != TevBias::Zero;  // != Compare is already known
+      const bool has_scale = ac.scale() != TevScale::Scale1;
 
-      const char op = (ac.op == TevOp::Sub ? '-' : '+');
+      const char op = (ac.op() == TevOp::Sub ? '-' : '+');
 
-      if (ac.dest == TevOutput::Prev)
+      if (ac.dest() == TevOutput::Prev)
         out = fmt::format_to(out, "dest.a = ");
       else
-        out = fmt::format_to(out, "{:n}.a = ", ac.dest);
+        out = fmt::format_to(out, "{:n}.a = ", ac.dest());
 
       if (has_scale)
         out = fmt::format_to(out, "(");
       if (has_d)
-        out = fmt::format_to(out, "{:n}.a", ac.d);
+        out = fmt::format_to(out, "{:n}.a", ac.d());
       if (has_ac || has_bc)
       {
         if (has_d)
           out = fmt::format_to(out, " {} ", op);
-        else if (ac.op == TevOp::Sub)
+        else if (ac.op() == TevOp::Sub)
           out = fmt::format_to(out, "{}", op);
         if (has_ac && has_bc)
         {
-          out = fmt::format_to(out, "lerp({:n}.a, {:n}.a, {:n}.a)", ac.a, ac.b, ac.c);
+          out = fmt::format_to(out, "lerp({:n}.a, {:n}.a, {:n}.a)", ac.a(), ac.b(), ac.c());
         }
         else if (has_ac)
         {
-          if (ac.c == TevAlphaArg::Zero)
-            out = fmt::format_to(out, "{:n}.a", ac.a);
+          if (ac.c() == TevAlphaArg::Zero)
+            out = fmt::format_to(out, "{:n}.a", ac.a());
           else
-            out = fmt::format_to(out, "(1 - {:n}.a)*{:n}.a", ac.c, ac.a);
+            out = fmt::format_to(out, "(1 - {:n}.a)*{:n}.a", ac.c(), ac.a());
         }
         else  // has_bc
         {
-          out = fmt::format_to(out, "{:n}.a*{:n}.a", ac.c, ac.b);
+          out = fmt::format_to(out, "{:n}.a*{:n}.a", ac.c(), ac.b());
         }
       }
       if (has_bias)
       {
         if (has_ac || has_bc || has_d)
-          out = fmt::format_to(out, "{}", ac.bias == TevBias::AddHalf ? " + .5" : " - .5");
+          out = fmt::format_to(out, "{}", ac.bias() == TevBias::AddHalf ? " + .5" : " - .5");
         else
-          out = fmt::format_to(out, "{}", ac.bias == TevBias::AddHalf ? ".5" : "-.5");
+          out = fmt::format_to(out, "{}", ac.bias() == TevBias::AddHalf ? ".5" : "-.5");
       }
       else
       {
@@ -671,7 +887,7 @@ struct fmt::formatter<TevStageCombiner::AlphaCombiner>
           out = fmt::format_to(out, "0");
       }
       if (has_scale)
-        out = fmt::format_to(out, ") * {:n}", ac.scale);
+        out = fmt::format_to(out, ") * {:n}", ac.scale());
       out = fmt::format_to(out, "\n\n");
     }
     return fmt::format_to(out,
@@ -686,9 +902,9 @@ struct fmt::formatter<TevStageCombiner::AlphaCombiner>
                           "Dest: {}\n"
                           "Rasterized color swaptable: {}\n"
                           "Texture color swaptable: {}",
-                          ac.a, ac.b, ac.c, ac.d, ac.bias, ac.op, ac.comparison,
-                          ac.clamp ? "Yes" : "No", ac.scale, ac.compare_mode, ac.dest, ac.rswap,
-                          ac.tswap);
+                          ac.a(), ac.b(), ac.c(), ac.d(), ac.bias(), ac.op(), ac.comparison(),
+                          ac.clamp() ? "Yes" : "No", ac.scale(), ac.compare_mode(), ac.dest(),
+                          ac.rswap(), ac.tswap());
   }
 };
 

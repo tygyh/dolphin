@@ -77,7 +77,7 @@ void Tev::SetRasColor(RasColorChan colorChan, u32 swaptable)
   }
 }
 
-void Tev::DrawColorRegular(const TevStageCombiner::ColorCombiner& cc, const InputRegType inputs[4])
+void Tev::DrawColorRegular(const TevStageCombiner::ColorCombinerState& cc, const InputRegType inputs[4])
 {
   for (int i = BLU_C; i <= RED_C; i++)
   {
@@ -86,24 +86,24 @@ void Tev::DrawColorRegular(const TevStageCombiner::ColorCombiner& cc, const Inpu
     const u16 c = InputReg.c + (InputReg.c >> 7);
 
     s32 temp = InputReg.a * (256 - c) + (InputReg.b * c);
-    temp <<= s_ScaleLShiftLUT[cc.scale];
-    temp += (cc.scale == TevScale::Divide2) ? 0 : (cc.op == TevOp::Sub) ? 127 : 128;
+    temp <<= s_ScaleLShiftLUT[cc.scale()];
+    temp += (cc.scale() == TevScale::Divide2) ? 0 : (cc.op() == TevOp::Sub) ? 127 : 128;
     temp >>= 8;
-    temp = cc.op == TevOp::Sub ? -temp : temp;
+    temp = cc.op() == TevOp::Sub ? -temp : temp;
 
-    s32 result = ((InputReg.d + s_BiasLUT[cc.bias]) << s_ScaleLShiftLUT[cc.scale]) + temp;
-    result = result >> s_ScaleRShiftLUT[cc.scale];
+    s32 result = ((InputReg.d + s_BiasLUT[cc.bias()]) << s_ScaleLShiftLUT[cc.scale()]) + temp;
+    result = result >> s_ScaleRShiftLUT[cc.scale()];
 
-    Reg[cc.dest][i] = result;
+    Reg[cc.dest()][i] = result;
   }
 }
 
-void Tev::DrawColorCompare(const TevStageCombiner::ColorCombiner& cc, const InputRegType inputs[4])
+void Tev::DrawColorCompare(const TevStageCombiner::ColorCombinerState& cc, const InputRegType inputs[4])
 {
   for (int i = BLU_C; i <= RED_C; i++)
   {
     u32 a, b;
-    switch (cc.compare_mode)
+    switch (cc.compare_mode())
     {
     case TevCompareMode::R8:
       a = inputs[RED_C].a;
@@ -126,38 +126,38 @@ void Tev::DrawColorCompare(const TevStageCombiner::ColorCombiner& cc, const Inpu
       break;
 
     default:
-      PanicAlertFmt("Invalid compare mode {}", cc.compare_mode);
+      PanicAlertFmt("Invalid compare mode {}", cc.compare_mode());
       continue;
     }
 
-    if (cc.comparison == TevComparison::GT)
-      Reg[cc.dest][i] = inputs[i].d + ((a > b) ? inputs[i].c : 0);
+    if (cc.comparison() == TevComparison::GT)
+      Reg[cc.dest()][i] = inputs[i].d + ((a > b) ? inputs[i].c : 0);
     else
-      Reg[cc.dest][i] = inputs[i].d + ((a == b) ? inputs[i].c : 0);
+      Reg[cc.dest()][i] = inputs[i].d + ((a == b) ? inputs[i].c : 0);
   }
 }
 
-void Tev::DrawAlphaRegular(const TevStageCombiner::AlphaCombiner& ac, const InputRegType inputs[4])
+void Tev::DrawAlphaRegular(const TevStageCombiner::AlphaCombinerState& ac, const InputRegType inputs[4])
 {
   const InputRegType& InputReg = inputs[ALP_C];
 
   const u16 c = InputReg.c + (InputReg.c >> 7);
 
   s32 temp = InputReg.a * (256 - c) + (InputReg.b * c);
-  temp <<= s_ScaleLShiftLUT[ac.scale];
-  temp += (ac.scale == TevScale::Divide2) ? 0 : (ac.op == TevOp::Sub) ? 127 : 128;
-  temp = ac.op == TevOp::Sub ? (-temp >> 8) : (temp >> 8);
+  temp <<= s_ScaleLShiftLUT[ac.scale()];
+  temp += (ac.scale() == TevScale::Divide2) ? 0 : (ac.op() == TevOp::Sub) ? 127 : 128;
+  temp = ac.op() == TevOp::Sub ? (-temp >> 8) : (temp >> 8);
 
-  s32 result = ((InputReg.d + s_BiasLUT[ac.bias]) << s_ScaleLShiftLUT[ac.scale]) + temp;
-  result = result >> s_ScaleRShiftLUT[ac.scale];
+  s32 result = ((InputReg.d + s_BiasLUT[ac.bias()]) << s_ScaleLShiftLUT[ac.scale()]) + temp;
+  result = result >> s_ScaleRShiftLUT[ac.scale()];
 
-  Reg[ac.dest].a = result;
+  Reg[ac.dest()].a = result;
 }
 
-void Tev::DrawAlphaCompare(const TevStageCombiner::AlphaCombiner& ac, const InputRegType inputs[4])
+void Tev::DrawAlphaCompare(const TevStageCombiner::AlphaCombinerState& ac, const InputRegType inputs[4])
 {
   u32 a, b;
-  switch (ac.compare_mode)
+  switch (ac.compare_mode())
   {
   case TevCompareMode::R8:
     a = inputs[RED_C].a;
@@ -180,14 +180,14 @@ void Tev::DrawAlphaCompare(const TevStageCombiner::AlphaCombiner& ac, const Inpu
     break;
 
   default:
-    PanicAlertFmt("Invalid compare mode {}", ac.compare_mode);
+    PanicAlertFmt("Invalid compare mode {}", ac.compare_mode());
     return;
   }
 
-  if (ac.comparison == TevComparison::GT)
-    Reg[ac.dest].a = inputs[ALP_C].d + ((a > b) ? inputs[ALP_C].c : 0);
+  if (ac.comparison() == TevComparison::GT)
+    Reg[ac.dest()].a = inputs[ALP_C].d + ((a > b) ? inputs[ALP_C].c : 0);
   else
-    Reg[ac.dest].a = inputs[ALP_C].d + ((a == b) ? inputs[ALP_C].c : 0);
+    Reg[ac.dest()].a = inputs[ALP_C].d + ((a == b) ? inputs[ALP_C].c : 0);
 }
 
 static bool AlphaCompare(int alpha, int ref, CompareMode comp)
@@ -434,8 +434,8 @@ void Tev::Draw()
     const TwoTevStageOrders& order = bpmem.tevorders[stageNum2];
 
     // stage combiners
-    const TevStageCombiner::ColorCombiner& cc = bpmem.combiners[stageNum].colorC;
-    const TevStageCombiner::AlphaCombiner& ac = bpmem.combiners[stageNum].alphaC;
+    const TevStageCombiner::ColorCombinerState& cc = bpmem.combiners[stageNum].colorC;
+    const TevStageCombiner::AlphaCombinerState& ac = bpmem.combiners[stageNum].alphaC;
 
     u32 texcoordSel = order.getTexCoord(stageOdd);
     const u32 texmap = order.getTexMap(stageOdd);
@@ -470,7 +470,7 @@ void Tev::Draw()
       RawTexColor.b = texel[u32(ColorChannel::Blue)];
       RawTexColor.a = texel[u32(ColorChannel::Alpha)];
 
-      const auto& swap = bpmem.tevksel.GetSwapTable(ac.tswap);
+      const auto& swap = bpmem.tevksel.GetSwapTable(ac.tswap());
       TexColor.r = texel[u32(swap[ColorChannel::Red])];
       TexColor.g = texel[u32(swap[ColorChannel::Green])];
       TexColor.b = texel[u32(swap[ColorChannel::Blue])];
@@ -486,61 +486,61 @@ void Tev::Draw()
     StageKonst.a = m_KonstLUT[ka].a;
 
     // set color
-    SetRasColor(order.getColorChan(stageOdd), ac.rswap);
+    SetRasColor(order.getColorChan(stageOdd), ac.rswap());
 
     // combine inputs
     InputRegType inputs[4];
-    inputs[BLU_C].a = m_ColorInputLUT[cc.a].b;
-    inputs[BLU_C].b = m_ColorInputLUT[cc.b].b;
-    inputs[BLU_C].c = m_ColorInputLUT[cc.c].b;
-    inputs[BLU_C].d = m_ColorInputLUT[cc.d].b;
-    inputs[GRN_C].a = m_ColorInputLUT[cc.a].g;
-    inputs[GRN_C].b = m_ColorInputLUT[cc.b].g;
-    inputs[GRN_C].c = m_ColorInputLUT[cc.c].g;
-    inputs[GRN_C].d = m_ColorInputLUT[cc.d].g;
-    inputs[RED_C].a = m_ColorInputLUT[cc.a].r;
-    inputs[RED_C].b = m_ColorInputLUT[cc.b].r;
-    inputs[RED_C].c = m_ColorInputLUT[cc.c].r;
-    inputs[RED_C].d = m_ColorInputLUT[cc.d].r;
-    inputs[ALP_C].a = m_AlphaInputLUT[ac.a].a;
-    inputs[ALP_C].b = m_AlphaInputLUT[ac.b].a;
-    inputs[ALP_C].c = m_AlphaInputLUT[ac.c].a;
-    inputs[ALP_C].d = m_AlphaInputLUT[ac.d].a;
+    inputs[BLU_C].a = m_ColorInputLUT[cc.a()].b;
+    inputs[BLU_C].b = m_ColorInputLUT[cc.b()].b;
+    inputs[BLU_C].c = m_ColorInputLUT[cc.c()].b;
+    inputs[BLU_C].d = m_ColorInputLUT[cc.d()].b;
+    inputs[GRN_C].a = m_ColorInputLUT[cc.a()].g;
+    inputs[GRN_C].b = m_ColorInputLUT[cc.b()].g;
+    inputs[GRN_C].c = m_ColorInputLUT[cc.c()].g;
+    inputs[GRN_C].d = m_ColorInputLUT[cc.d()].g;
+    inputs[RED_C].a = m_ColorInputLUT[cc.a()].r;
+    inputs[RED_C].b = m_ColorInputLUT[cc.b()].r;
+    inputs[RED_C].c = m_ColorInputLUT[cc.c()].r;
+    inputs[RED_C].d = m_ColorInputLUT[cc.d()].r;
+    inputs[ALP_C].a = m_AlphaInputLUT[ac.a()].a;
+    inputs[ALP_C].b = m_AlphaInputLUT[ac.b()].a;
+    inputs[ALP_C].c = m_AlphaInputLUT[ac.c()].a;
+    inputs[ALP_C].d = m_AlphaInputLUT[ac.d()].a;
 
-    if (cc.bias != TevBias::Compare)
+    if (cc.bias() != TevBias::Compare)
       DrawColorRegular(cc, inputs);
     else
       DrawColorCompare(cc, inputs);
 
-    if (cc.clamp)
+    if (cc.clamp())
     {
-      Reg[cc.dest].r = Clamp255(Reg[cc.dest].r);
-      Reg[cc.dest].g = Clamp255(Reg[cc.dest].g);
-      Reg[cc.dest].b = Clamp255(Reg[cc.dest].b);
+      Reg[cc.dest()].r = Clamp255(Reg[cc.dest()].r);
+      Reg[cc.dest()].g = Clamp255(Reg[cc.dest()].g);
+      Reg[cc.dest()].b = Clamp255(Reg[cc.dest()].b);
     }
     else
     {
-      Reg[cc.dest].r = Clamp1024(Reg[cc.dest].r);
-      Reg[cc.dest].g = Clamp1024(Reg[cc.dest].g);
-      Reg[cc.dest].b = Clamp1024(Reg[cc.dest].b);
+      Reg[cc.dest()].r = Clamp1024(Reg[cc.dest()].r);
+      Reg[cc.dest()].g = Clamp1024(Reg[cc.dest()].g);
+      Reg[cc.dest()].b = Clamp1024(Reg[cc.dest()].b);
     }
 
-    if (ac.bias != TevBias::Compare)
+    if (ac.bias() != TevBias::Compare)
       DrawAlphaRegular(ac, inputs);
     else
       DrawAlphaCompare(ac, inputs);
 
-    if (ac.clamp)
-      Reg[ac.dest].a = Clamp255(Reg[ac.dest].a);
+    if (ac.clamp())
+      Reg[ac.dest()].a = Clamp255(Reg[ac.dest()].a);
     else
-      Reg[ac.dest].a = Clamp1024(Reg[ac.dest].a);
+      Reg[ac.dest()].a = Clamp1024(Reg[ac.dest()].a);
   }
 
   // convert to 8 bits per component
   // the results of the last tev stage are put onto the screen,
   // regardless of the used destination register - TODO: Verify!
-  const auto& color_index = bpmem.combiners[bpmem.genMode.numtevstages].colorC.dest;
-  const auto& alpha_index = bpmem.combiners[bpmem.genMode.numtevstages].alphaC.dest;
+  const auto& color_index = bpmem.combiners[bpmem.genMode.numtevstages].colorC.dest();
+  const auto& alpha_index = bpmem.combiners[bpmem.genMode.numtevstages].alphaC.dest();
   u8 output[4] = {(u8)Reg[alpha_index].a, (u8)Reg[color_index].b, (u8)Reg[color_index].g,
                   (u8)Reg[color_index].r};
 

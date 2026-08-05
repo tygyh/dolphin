@@ -779,7 +779,7 @@ ShaderCode GenPixelShader(APIType api_type, const ShaderHostConfig& host_config,
     out.Write("\n"
               "      s.RawTexColor = sampleTextureWrapper(sampler_num, tevcoord.xy, layer);\n"
               "      uint swap = {};\n",
-              BitfieldExtract<&TevStageCombiner::AlphaCombiner::tswap>("ss.ac"));
+              BitfieldExtract<&TevStageCombiner::AlphaCombinerState::tswap>("ss.ac"));
     out.Write("      s.TexColor = Swizzle(swap, s.RawTexColor);\n");
     out.Write("    }} else {{\n"
               "      // Texture is disabled\n"
@@ -792,24 +792,24 @@ ShaderCode GenPixelShader(APIType api_type, const ShaderHostConfig& host_config,
             "    {{\n"
             "      // Color Combiner\n");
   out.Write("      uint color_a = {};\n",
-            BitfieldExtract<&TevStageCombiner::ColorCombiner::a>("ss.cc"));
+            BitfieldExtract<&TevStageCombiner::ColorCombinerState::a>("ss.cc"));
   out.Write("      uint color_b = {};\n",
-            BitfieldExtract<&TevStageCombiner::ColorCombiner::b>("ss.cc"));
+            BitfieldExtract<&TevStageCombiner::ColorCombinerState::b>("ss.cc"));
   out.Write("      uint color_c = {};\n",
-            BitfieldExtract<&TevStageCombiner::ColorCombiner::c>("ss.cc"));
+            BitfieldExtract<&TevStageCombiner::ColorCombinerState::c>("ss.cc"));
   out.Write("      uint color_d = {};\n",
-            BitfieldExtract<&TevStageCombiner::ColorCombiner::d>("ss.cc"));
+            BitfieldExtract<&TevStageCombiner::ColorCombinerState::d>("ss.cc"));
 
   out.Write("      uint color_bias = {};\n",
-            BitfieldExtract<&TevStageCombiner::ColorCombiner::bias>("ss.cc"));
+            BitfieldExtract<&TevStageCombiner::ColorCombinerState::bias>("ss.cc"));
   out.Write("      bool color_op = bool({});\n",
-            BitfieldExtract<&TevStageCombiner::ColorCombiner::op>("ss.cc"));
+            BitfieldExtract<&TevStageCombiner::ColorCombinerState::op>("ss.cc"));
   out.Write("      bool color_clamp = bool({});\n",
-            BitfieldExtract<&TevStageCombiner::ColorCombiner::clamp>("ss.cc"));
+            BitfieldExtract<&TevStageCombiner::ColorCombinerState::clamp>("ss.cc"));
   out.Write("      uint color_scale = {};\n",
-            BitfieldExtract<&TevStageCombiner::ColorCombiner::scale>("ss.cc"));
+            BitfieldExtract<&TevStageCombiner::ColorCombinerState::scale>("ss.cc"));
   out.Write("      uint color_dest = {};\n",
-            BitfieldExtract<&TevStageCombiner::ColorCombiner::dest>("ss.cc"));
+            BitfieldExtract<&TevStageCombiner::ColorCombinerState::dest>("ss.cc"));
 
   out.Write(
       "      uint color_compare_op = color_scale << 1 | uint(color_op);\n"
@@ -862,24 +862,24 @@ ShaderCode GenPixelShader(APIType api_type, const ShaderHostConfig& host_config,
   // Alpha combiner
   out.Write("      // Alpha Combiner\n");
   out.Write("      uint alpha_a = {};\n",
-            BitfieldExtract<&TevStageCombiner::AlphaCombiner::a>("ss.ac"));
+            BitfieldExtract<&TevStageCombiner::AlphaCombinerState::a>("ss.ac"));
   out.Write("      uint alpha_b = {};\n",
-            BitfieldExtract<&TevStageCombiner::AlphaCombiner::b>("ss.ac"));
+            BitfieldExtract<&TevStageCombiner::AlphaCombinerState::b>("ss.ac"));
   out.Write("      uint alpha_c = {};\n",
-            BitfieldExtract<&TevStageCombiner::AlphaCombiner::c>("ss.ac"));
+            BitfieldExtract<&TevStageCombiner::AlphaCombinerState::c>("ss.ac"));
   out.Write("      uint alpha_d = {};\n",
-            BitfieldExtract<&TevStageCombiner::AlphaCombiner::d>("ss.ac"));
+            BitfieldExtract<&TevStageCombiner::AlphaCombinerState::d>("ss.ac"));
 
   out.Write("      uint alpha_bias = {};\n",
-            BitfieldExtract<&TevStageCombiner::AlphaCombiner::bias>("ss.ac"));
+            BitfieldExtract<&TevStageCombiner::AlphaCombinerState::bias>("ss.ac"));
   out.Write("      bool alpha_op = bool({});\n",
-            BitfieldExtract<&TevStageCombiner::AlphaCombiner::op>("ss.ac"));
+            BitfieldExtract<&TevStageCombiner::AlphaCombinerState::op>("ss.ac"));
   out.Write("      bool alpha_clamp = bool({});\n",
-            BitfieldExtract<&TevStageCombiner::AlphaCombiner::clamp>("ss.ac"));
+            BitfieldExtract<&TevStageCombiner::AlphaCombinerState::clamp>("ss.ac"));
   out.Write("      uint alpha_scale = {};\n",
-            BitfieldExtract<&TevStageCombiner::AlphaCombiner::scale>("ss.ac"));
+            BitfieldExtract<&TevStageCombiner::AlphaCombinerState::scale>("ss.ac"));
   out.Write("      uint alpha_dest = {};\n",
-            BitfieldExtract<&TevStageCombiner::AlphaCombiner::dest>("ss.ac"));
+            BitfieldExtract<&TevStageCombiner::AlphaCombinerState::dest>("ss.ac"));
 
   out.Write(
       "      uint alpha_compare_op = alpha_scale << 1 | uint(alpha_op);\n"
@@ -932,10 +932,10 @@ ShaderCode GenPixelShader(APIType api_type, const ShaderHostConfig& host_config,
   out.Write("  int4 TevResult;\n");
   out.Write(
       "  TevResult.xyz = getTevReg(s, {}).xyz;\n",
-      BitfieldExtract<&TevStageCombiner::ColorCombiner::dest>("bpmem_combiners(num_stages).x"));
+      BitfieldExtract<&TevStageCombiner::ColorCombinerState::dest>("bpmem_combiners(num_stages).x"));
   out.Write(
       "  TevResult.w = getTevReg(s, {}).w;\n",
-      BitfieldExtract<&TevStageCombiner::AlphaCombiner::dest>("bpmem_combiners(num_stages).y"));
+      BitfieldExtract<&TevStageCombiner::AlphaCombinerState::dest>("bpmem_combiners(num_stages).y"));
 
   out.Write("  TevResult &= 255;\n\n");
 
@@ -1306,7 +1306,7 @@ ShaderCode GenPixelShader(APIType api_type, const ShaderHostConfig& host_config,
   out.Write("  if (ras < 2u) {{ // Lighting Channel 0 or 1\n"
             "    int4 color = iround(((ras == 0u) ? colors_0 : colors_1) * 255.0);\n"
             "    uint swap = {};\n",
-            BitfieldExtract<&TevStageCombiner::AlphaCombiner::rswap>("ss.ac"));
+            BitfieldExtract<&TevStageCombiner::AlphaCombinerState::rswap>("ss.ac"));
   out.Write("    return Swizzle(swap, color);\n");
   out.Write("  }} else if (ras == 5u) {{ // Alpha Bump\n"
             "    return int4(s.AlphaBump, s.AlphaBump, s.AlphaBump, s.AlphaBump);\n"

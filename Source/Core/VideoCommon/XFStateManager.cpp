@@ -75,7 +75,7 @@ void XFStateManager::InvalidateXFRange(int start, int end)
     m_pos_normal_matrix_changed = true;
   }
 
-  if (IsInPosMatrix(start_u32, g_main_cp_state.matrix_index_a.PosNormalMtxIdx) ||
+  if (IsInPosMatrix(start_u32, g_main_cp_state.matrix_index_a.Tex0MtxIdx) ||
       IsInPosMatrix(start_u32, g_main_cp_state.matrix_index_a.Tex1MtxIdx) ||
       IsInPosMatrix(start_u32, g_main_cp_state.matrix_index_a.Tex2MtxIdx) ||
       IsInPosMatrix(start_u32, g_main_cp_state.matrix_index_a.Tex3MtxIdx))

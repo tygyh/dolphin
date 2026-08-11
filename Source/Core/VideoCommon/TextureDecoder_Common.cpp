@@ -289,7 +289,7 @@ static void TexDecoder_DrawOverlay(u8* dst, int width, int height, TextureFormat
     {
       for (int x = 0; x < xcnt; x++)
       {
-        int* dtp = Common::BitCastPtr<int*>(dst);
+        int* dtp = reinterpret_cast<int*>(dst);
         dtp[(y + yoff) * width + x + xoff] = ptr[x] ? 0xFFFFFFFF : 0xFF000000;
       }
       ptr += 9;
@@ -301,7 +301,7 @@ static void TexDecoder_DrawOverlay(u8* dst, int width, int height, TextureFormat
 void TexDecoder_Decode(u8* dst, const u8* src, int width, int height, TextureFormat texformat,
                        const u8* tlut, TLUTFormat tlutfmt)
 {
-  _TexDecoder_DecodeImpl(Common::BitCastPtr<u32*>(dst), src, width, height, texformat, tlut,
+  _TexDecoder_DecodeImpl(reinterpret_cast<u32*>(dst), src, width, height, texformat, tlut,
                          tlutfmt);
 
   if (TexFmt_Overlay_Enable)
@@ -632,9 +632,9 @@ void TexDecoder_DecodeTexel(u8* dst, std::span<const u8> src, int s, int t, int 
     // http://www.equasys.de/colorconversion.html#YCbCr-RGBColorFormatConversion
     // TODO: Use more precise numbers for this conversion (although on real hardware, the XFB isn't
     // in a real texture format, so does this conversion actually ever happen?)
-    u8 R = MathUtil::SaturatingCast<int>(1.164f * Y + 1.596f * V);
-    u8 G = MathUtil::SaturatingCast<int>(1.164f * Y - 0.392f * U - 0.813f * V);
-    u8 B = MathUtil::SaturatingCast<int>(1.164f * Y + 2.017f * U);
+    u8 R = MathUtil::SaturatingCast<u8>(1.164f * Y + 1.596f * V);
+    u8 G = MathUtil::SaturatingCast<u8>(1.164f * Y - 0.392f * U - 0.813f * V);
+    u8 B = MathUtil::SaturatingCast<u8>(1.164f * Y + 2.017f * U);
     dst[t * imageWidth + s] = 0xff000000 | B << 16 | G << 8 | R;
   }
   break;
